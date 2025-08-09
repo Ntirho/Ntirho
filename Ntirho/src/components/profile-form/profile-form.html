@@ -1,0 +1,34 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 py-4">
+  <div>
+    <label>{{ translations.nameLabel }}</label>
+    <input formControlName="name" [placeholder]="translations.namePlaceholder" class="input" />
+  </div>
+
+  <div>
+    <label>{{ translations.locationLabel }}</label>
+    <input formControlName="location" [placeholder]="translations.locationPlaceholder" class="input" />
+  </div>
+
+  <div>
+    <label>{{ translations.skillsLabel }}</label>
+    <div class="flex flex-wrap gap-2">
+      <button
+        *ngFor="let skill of skillsList"
+        type="button"
+        class="badge badge-secondary"
+        [class.selected]="form.value.skills?.includes(skill.value)"
+        (click)="toggleSkill(skill.value)"
+      >
+        {{ skill.label }}
+      </button>
+    </div>
+    <small class="text-muted">{{ translations.skillsDescriptionProfile }}</small>
+  </div>
+
+  <button type="submit" class="btn w-full" [disabled]="isLoading">
+    <i *ngIf="isLoading" class="bx bx-loader-alt animate-spin mr-2"></i>
+    {{ translations.saveChanges }}
+  </button>
+</form>
+
+<router-outlet/>

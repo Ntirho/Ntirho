@@ -1,0 +1,30 @@
+<div class="w-full shadow-2xl bg-neutral-50 rounded">
+  <div class="text-center p-6">
+    <h2 class="text-3xl font-bold font-headline">{{ translations.welcomeBack }}</h2>
+    <p class="text-muted-foreground">{{ translations.magicLinkPrompt }}</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 px-6 pb-6">
+    <div class="relative">
+      <i class="bx bx-mail-send absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xl"></i>
+      <input
+        type="email"
+        formControlName="email"
+        [placeholder]="translations.emailPlaceholder"
+        class="pl-10 w-full border rounded px-4 py-2 bg-blue-200"
+      />
+      <div *ngIf="form.controls.email.errors" class="text-red-500 text-sm mt-1">
+        {{ form.controls.email.errors['message'] }}
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-500/90 flex items-center justify-center cursor-pointer"
+      
+    >
+      <i *ngIf="isLoading" class="bx bx-loader-alt animate-spin mr-2 text-lg"></i>
+      {{ translations.sendMagicLink }}
+    </button>
+  </form>
+</div>

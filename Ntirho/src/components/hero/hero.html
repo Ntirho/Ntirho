@@ -1,0 +1,30 @@
+<section class="container mx-auto px-4 py-16 sm:py-24 ">
+  <div class="grid lg:grid-cols-2 gap-12 items-center">
+    <!-- Left: Title + Story -->
+    <div class="space-y-8">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-headline text-center lg:text-left">
+        {{ translations.heroTitle }}
+      </h1>
+
+      <div class="shadow-lg rounded p-6 text-left bg-neutral-50">
+        <h2 class="text-xl font-headline mb-2">{{ translations.thaboStoryTitle }}</h2>
+        <p class="text-muted-foreground">{{ translations.thaboStory }}</p>
+      </div>
+    </div>
+
+    <!-- Right: Login + Signup -->
+    <div class="flex flex-col gap-4 justify-center">
+      <app-login-form></app-login-form>
+
+      <div class="flex items-center gap-4">
+        <div class="flex-1 h-px bg-muted-foreground"></div>
+        <span class="text-muted-foreground text-sm">or</span>
+        <div class="flex-1 h-px bg-muted-foreground"></div>
+      </div>
+
+      <a routerLink="/signup" class="px-6 py-3 text-center bg-orange-400 text-accent-foreground hover:bg-orange-500 rounded text-lg">
+        {{ translations.signUp }}
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,92 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="max-w-2xl mx-auto space-y-6 bg-white p-6 rounded-lg shadow-md">
+  <!-- Job Title -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-700">{{ translations.jobTitleLabel }}</label>
+    <input
+      formControlName="title"
+      [placeholder]="translations.jobTitlePlaceholder"
+      class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+    />
+    <div *ngIf="form.get('title')?.invalid && (form.get('title')?.touched || triedValidation)" class="text-red-500 text-sm">
+      Required. Please enter a valid job title.
+    </div>
+  </div>
+
+  <!-- Company -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-700">{{ translations.companyLabel }}</label>
+    <input
+      formControlName="company"
+      [placeholder]="translations.companyPlaceholder"
+      class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+    />
+    <div *ngIf="form.get('company')?.invalid && (form.get('company')?.touched || triedValidation)" class="text-red-500 text-sm">
+      Required. Please enter a valid company name.
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-700">{{ translations.locationLabel }}</label>
+    <input
+      formControlName="location"
+      [placeholder]="translations.locationPlaceholder"
+      class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+    />
+    <div *ngIf="form.get('location')?.invalid && (form.get('location')?.touched || triedValidation)" class="text-red-500 text-sm">
+      Required. Please enter a valid location.
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="space-y-1">
+    <label class="block text-sm font-medium text-gray-700">{{ translations.descriptionLabel }}</label>
+    <textarea
+      formControlName="description"
+      [placeholder]="translations.descriptionPlaceholder"
+      class="w-full border border-gray-300 rounded-md px-2 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+      rows="4"
+    ></textarea>
+    <div *ngIf="form.get('description')?.invalid && (form.get('description')?.touched || triedValidation)" class="text-red-500 text-sm">
+      Required. Please enter a valid job description.
+    </div>
+  </div>
+
+  <!-- Skills -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-gray-700">{{ translations.skillsLabel }}</label>
+    <button
+      type="button"
+      (click)="showSkills = !showSkills"
+      class="w-full text-left border border-gray-300 rounded-md px-4 py-2 bg-gray-50 hover:bg-gray-100"
+    >
+      {{ form.value.skills.length ? getSelectedSkillLabels() : translations.skillsPlaceholder }}
+    </button>
+
+    <div *ngIf="showSkills" class="grid grid-cols-2 gap-2 mt-2">
+      <div *ngFor="let skill of skillsList" class="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          [checked]="isSelected(skill.value)"
+          (change)="toggleSkill(skill.value)"
+          class="accent-primary"
+        />
+        <span class="text-sm text-gray-700">{{ skill.label }}</span>
+      </div>
+    </div>
+
+    <small class="text-gray-500">{{ translations.skillsDescription }}</small>
+    <div *ngIf="form.get('skills')?.invalid && form.get('skills')?.touched" class="text-red-500 text-sm">
+      Required. Please select the appropriate skills.
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    class="w-full bg-orange-500 text-white py-2 px-2 rounded-md hover:bg-orange-400 cursor-pointer transition duration-200"
+  >
+    <span *ngIf="isLoading">Posting...</span>
+    <span *ngIf="!isLoading">{{ translations.postJobButton }}</span>
+  </button>
+</form>

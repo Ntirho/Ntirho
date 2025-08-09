@@ -1,0 +1,52 @@
+<form formGroup="form" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
+
+  <!-- Institution -->
+  <div class="flex flex-col">
+    <label class="font-medium">School or Institution</label>
+    <input
+      type="text"
+      formControlName="institution"
+      placeholder="e.g. Lancea Vale Secondary School"
+      class="bg-gray-200 h-8 p-2 rounded"
+    />
+  </div>
+
+  <!-- Qualification -->
+  <div class="flex flex-col">
+    <label class="font-medium">Qualification or Study Programme</label>
+    <select formControlName="qualification" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
+      <option value="">Select</option>
+      <option *ngFor="let q of qualifications" [value]="q">{{ q }}</option>
+    </select>
+  </div>
+
+  <!-- Start Date -->
+  <div class="flex flex-col">
+    <label class="font-medium">Start Date</label>
+    <input type="date" formControlName="startDate" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+  </div>
+
+  <!-- Completion Date -->
+  <div class="flex flex-col">
+    <label class="font-medium">Completion Date</label>
+    <input type="date" formControlName="completionDate" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+  </div>
+
+  <!-- Academic Average -->
+  <div class="flex flex-col">
+    <label class="font-medium">Academic Average</label>
+    <input type="range" formControlName="academicAverage" min="0" max="100" class="bg-gray-200 h-2 rounded-full cursor-pointer" />
+    <span class="text-sm text-gray-600 mt-1">{{ form.value.academicAverage }}%</span>
+  </div>
+
+  <!-- Submit Button -->
+<div class="flex flex-col justify-center">
+  <button
+    type="submit" (submit)="onSubmit()" [disabled]="!form.invalid"
+    class="bg-amber-500 hover:bg-amber-400 text-white px-6 py-2 rounded cursor-pointer"
+  >
+    Save Education
+  </button>
+</div>
+
+</form>

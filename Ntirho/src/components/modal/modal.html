@@ -1,0 +1,54 @@
+<div *ngIf="openModal" class="fixed inset-0 bg-[rgba(128,128,128,0.4)] flex items-center justify-center z-50">
+  <div class="bg-white max-w-2xl w-full p-4 rounded-lg shadow-lg">
+    <h3 class="text-2xl font-bold font-headline">{{ job.title }}</h3>
+
+    <div class="flex flex-col gap-2 text-muted-foreground">
+      <div class="flex items-center gap-2 pt-1">
+        <i class="bx bx-briefcase text-lg"></i> {{ job.company }}
+      </div>
+      <div class="flex items-center gap-2">
+        <i class="bx bx-map text-lg"></i> {{ job.location }}
+      </div>
+    </div>
+
+    <div class="py-4 space-y-4">
+      <div>
+        <h4 class="font-semibold flex items-center gap-2 mb-2">
+          <i class="bx bx-file text-primary"></i> {{ translations.descriptionLabel }}
+        </h4>
+        <p class="text-sm text-muted-foreground whitespace-pre-line">{{ job.description }}</p>
+      </div>
+
+      <div>
+        <h4 class="font-semibold flex items-center gap-2 mb-2">
+          <i class="bx bx-check-circle text-primary"></i> {{ translations.skillsLabel }}
+        </h4>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let skill of job.skills" class="badge badge-secondary">
+            {{ skill }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center gap-2 pt-4">
+      <button class="bg-red-500 hover:bg-red-400 cursor-pointer rounded-lg p-2 items-center w-md" (click)="onClose()">
+        {{ translations.close }}
+      </button>
+      <button class="bg-green-500 text-accent-foreground hover:bg-green-400 cursor-pointer rounded-lg w-md" (click)="handleApply()">
+        {{ translations.applyNow }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div *ngIf="openModal" class="fixed inset-0 bg-[rgba(128,128,128,0.4)] flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h2 class="text-xl font-bold mb-4">Modal Title</h2>
+    <p class="mb-4">This is your popup content. You can put anything here.</p>
+    <button (click)="onClose()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400 cursor-pointer">
+      Close
+    </button>
+  </div>
+</div> -->
