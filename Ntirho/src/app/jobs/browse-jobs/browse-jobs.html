@@ -1,0 +1,49 @@
+<div class="flex flex-col min-h-screen bg-gray-50 text-gray-900">
+  <main class="flex-1 container mx-auto px-4 py-8">
+    <div class="space-y-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold tracking-tight font-headline">{{ translations.browseJobsTitle }}</h1>
+        <p class="mt-2 text-lg text-muted-foreground text-cyan-600">{{ translations.browseJobsSubtitle }}</p>
+      </div>
+
+      <div class="flex flex-col">
+        <app-voice-search (search)="handleVoiceSearch($event)"></app-voice-search>
+      </div>
+
+      <div class="p-4 rounded-lg bg-card bg-neutral-50 shadow-sm">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+          <div class="grid gap-1.5">
+            <label class="text-sm font-medium">{{ translations.locationLabel }}</label>
+            <input
+              class="input rounded-lg h-10 px-2.5 bg-cyan-100"
+              [placeholder]="translations.locationPlaceholder"
+              [(ngModel)]="locationFilter"
+            />
+          </div>
+
+          <div class="grid gap-1.5">
+            <label class="text-sm font-medium">{{ translations.skillsLabel }}</label>
+            <select class="select rounded-lg h-10 px-2.5 bg-cyan-100" [(ngModel)]="skillFilter">
+              <option value="all">{{ translations.allSkills }}</option>
+              <option *ngFor="let skill of skillsList" [value]="skill.value">{{ skill.label }}</option>
+            </select>
+          </div>
+
+          <button class="btn btn-outline w-full sm:w-auto hover:bg-orange-400 cursor-pointer bg-cyan-100 h-8 rounded-lg" (click)="clearFilters()">
+            <i class="bx bx-filter mr-2 h-4 w-4"></i>
+            {{ translations.clearFilters }}
+          </button>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-job-card *ngFor="let job of filteredJobs" [job]="job"></app-job-card>
+
+        <div *ngIf="filteredJobs.length === 0" class="col-span-full text-center py-12">
+          <h2 class="text-2xl font-semibold">{{ translations.noJobsFoundTitle }}</h2>
+          <p class="text-muted-foreground mt-2">{{ translations.noJobsFoundSubtitle }}</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
