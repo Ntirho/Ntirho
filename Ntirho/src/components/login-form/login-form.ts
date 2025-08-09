@@ -1,45 +1,24 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-login-form',
-//   imports: [],
-//   templateUrl: './login-form.html',
-//   styleUrl: './login-form.css'
-// })
-// export class LoginForm {
-
-// }
+// login-form.ts
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@ngneat/reactive-forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { z } from 'zod';
+import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { LanguageService } from '../../services/language';
 import { AuthService } from '../../services/auth';
-import { Router, RouterLink } from '@angular/router';
-import { FormControl } from '@angular/forms';
-//import { ToastService } from '../../services/toast';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
-});
-
 type LoginFormType = {
   email: FormControl<string>;
+  password: FormControl<string>;
 };
 
 @Component({
   selector: 'app-login-form',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginForm implements OnInit {
   form!: FormGroup<LoginFormType>;
@@ -49,37 +28,44 @@ export class LoginForm implements OnInit {
   constructor(
     private languageService: LanguageService,
     private authService: AuthService,
-    //private toast: ToastService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.translations = this.languageService.translations;
     this.form = new FormGroup({
-      email: new FormControl ("", { nonNullable: true }),
+      email: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.email]
+      }),
+      password: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(6)]
+      }),
     });
   }
 
   async onSubmit() {
-    if (this.form.invalid) return;
-    this.isLoading = false;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading = true;
+    const email = this.form.controls.email.value;
+const password = this.form.controls.password.value;
 
     try {
-      const result = await this.authService.loginUser({ email: "", password: "string" });
-
+      const result = await this.authService.signInWithEmailPassword(email, password);
       if (result.success) {
-        //this.toast.show(this.translations.magicLinkSentTitle, this.translations.magicLinkSentDesc);
-
-        setTimeout(() => {
-          this.authService.login();
-          //this.toast.show(this.translations.loginSuccessTitle, this.translations.welcomeBack);
-          this.router.navigate(['/jobs']);
-        }, 2000);
+        this.router.navigate(['/jobs']);
       } else {
-        throw new Error(result.message);
+        alert(result.message || 'Login failed.');
       }
     } catch (error: any) {
-      //this.toast.show(this.translations.loginFailedTitle, error.message || this.translations.loginFailedDesc, 'error');
+      console.error('Login error:', error);
+      alert('Login failed. Please try again.');
+    } finally {
       this.isLoading = false;
     }
   }

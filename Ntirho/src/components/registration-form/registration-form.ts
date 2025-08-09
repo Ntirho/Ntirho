@@ -1,13 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { LanguageService } from '../../services/language';
+import { AuthService } from '../../services/auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { isValid } from 'zod';
+
+// Skills list defined OUTSIDE the component
+const skillsList = [
+  { label: "Construction", value: "construction" },
+  { label: "Farming", value: "farming" },
+  { label: "Retail", value: "retail" },
+  { label: "Hospitality", value: "hospitality" },
+  { label: "Driving", value: "driving" },
+  { label: "Domestic Work", value: "domestic_work" },
+  { label: "Other", value: "other" },
+] as const;
 
 @Component({
   selector: 'app-registration-form',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule
@@ -20,22 +32,26 @@ export class RegistrationForm implements OnInit {
   isLoading = false;
   showSkills = true;
   translations: any = {};
-  skillsList = skillsList;
-
   showDisabilityDetails = false;
+
+  //  Now references the constant above
+  skillsList = skillsList;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private languageService: LanguageService
-  ) { }
+    private languageService: LanguageService,
+    private authService: AuthService
+  ) {}
 
-  ngOnInit () {
+  ngOnInit() {
     this.translations = this.languageService.translations;
 
     this.personalDetailsForm = this.fb.group({
       fullNames: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
       contact: this.fb.group({
         countryCode: ['+27', Validators.required],
         phone: ['', Validators.required],
@@ -48,6 +64,7 @@ export class RegistrationForm implements OnInit {
       hasLicense: [false],
       hasDisability: [false],
       disabilityDetails: [''],
+      skills: [[]], // initial value is an empty array
     });
 
     this.personalDetailsForm.get('hasDisability')?.valueChanges.subscribe(val => {
@@ -58,23 +75,53 @@ export class RegistrationForm implements OnInit {
     });
   }
 
-  // Boolean to control visiblity of required
+  // Boolean to control validation display
   isValidated = true;
-  async onSubmit() {
-    if (this.personalDetailsForm.valid) {
-      console.log('Form Submitted:', this.personalDetailsForm.value);
-      this.isValidated = true;
-    } else {
-      console.log('Form Invalid');
-      this.isValidated = false;
-    }
+
+async onSubmit() {
+  if (this.personalDetailsForm.invalid) {
+    this.isValidated = false;
+    return;
   }
 
+  this.isLoading = true;
+  const formData = this.personalDetailsForm.value;
+
+  // Check if passwords match
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match.");
+    this.isLoading = false;
+    return;
+  }
+
+  try {
+    const result = await this.authService.signUp(formData.email, formData.password);
+
+    if (result.success) {
+      alert('Registration successful! Please check your email to verify your account.');
+      this.personalDetailsForm.reset();
+      this.router.navigate(['/']);
+    } else {
+      // Handle the error message returned from signUp
+      alert(result.message || 'Registration failed. Please try again.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('An unexpected error occurred. Please try again.');
+  } finally {
+    this.isLoading = false;
+  }
+}
+
+
+
+
+  // Skills checkbox logic
   toggleSkill(skill: string) {
-    const current = this.personalDetailsForm.value.skills;
-    const updated = current.includes(skill)
-      ? current.filter((s: string) => s !== skill)
-      : [...current, skill];
+    const currentSkills = this.personalDetailsForm.value.skills;
+    const updated = currentSkills.includes(skill)
+      ? currentSkills.filter((s: string) => s !== skill)
+      : [...currentSkills, skill];
     this.personalDetailsForm.patchValue({ skills: updated });
   }
 
@@ -82,14 +129,3 @@ export class RegistrationForm implements OnInit {
     return this.personalDetailsForm.value.skills.includes(skill);
   }
 }
-
-
-const skillsList = [
-  { label: "Construction", value: "construction" },
-  { label: "Farming", value: "farming" },
-  { label: "Retail", value: "retail" },
-  { label: "Hospitality", value: "hospitality" },
-  { label: "Driving", value: "driving" },
-  { label: "Domestic Work", value: "domestic_work" },
-  { label: "Other", value: "other" },
-] as const;

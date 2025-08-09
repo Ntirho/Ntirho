@@ -20,6 +20,24 @@
     </div>
   </div>
 
+  <!-- Password -->
+  <div class="flex flex-col">
+    <label class="font-medium">Password</label>
+    <input type="password" formControlName="password" class="bg-gray-200 h-8 p-2 rounded" />
+    <div *ngIf="personalDetailsForm.get('password')?.invalid && (personalDetailsForm.get('password')?.touched || !isValidated)" class="text-red-500 text-sm">
+      Required.
+    </div>
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="flex flex-col">
+    <label class="font-medium">Confirm Password</label>
+    <input type="password" formControlName="confirmPassword" class="bg-gray-200 h-8 p-2 rounded" />
+    <div *ngIf="personalDetailsForm.get('confirmPassword')?.invalid && (personalDetailsForm.get('confirmPassword')?.touched || !isValidated)" class="text-red-500 text-sm">
+      Required. Passwords must match.
+    </div>
+  </div>
+
   <!-- Contact Details -->
   <div class="flex flex-col">
     <label class="font-medium">Contact Details</label>
@@ -120,7 +138,7 @@
 
   <!-- Submit -->
   <div class="flex flex-col justify-center">
-    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded cursor-pointer transition">
+    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded cursor-pointer transition" [disabled]="isLoading">
     Submit
   </button>
   </div>

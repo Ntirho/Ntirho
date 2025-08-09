@@ -1,27 +1,25 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class Auth {
-  
-// }
-import { Injectable } from '@angular/core';
+// src/services/auth.ts
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-//import { AngularFireAuth } from '@angular/fire/combat/auth'; 
+import { supabase } from '../supabase/supabaseClient';
+import { isPlatformBrowser } from '@angular/common';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this._isAuthenticated.asObservable();
+  private isBrowser: boolean;
 
-  constructor(private router: Router, /* private afAuth: AngularFireAuth */) {
-    if (typeof window !== 'undefined' && localStorage) {
+  constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
       const loggedIn = localStorage.getItem('isAuthenticated') === 'true';
       this._isAuthenticated.next(loggedIn);
+    } else {
+      // On server, set to false or handle differently if needed
+      this._isAuthenticated.next(false);
     }
   }
 
@@ -30,31 +28,51 @@ export class AuthService {
   }
 
   login(): void {
-    localStorage.setItem('isAuthenticated', 'true');
+    if (this.isBrowser) {
+      localStorage.setItem('isAuthenticated', 'true');
+    }
     this._isAuthenticated.next(true);
   }
 
-  async loginUser(formData: { email: string; password?: string }): Promise<{ success: boolean; message?: string }> {
-    try {
-      if (formData.password) {
-        // Email/password login
-        //await this.afAuth.signInWithEmailAndPassword(formData.email, formData.password);
-      } else {
-        // Magic link or passwordless login (if supported)
-        // await this.afAuth.sendSignInLinkToEmail(formData.email, {
-        //   url: 'http://localhost:4200/login',
-        //   handleCodeInApp: true
-        // });
-      }
+async signUp(email: string, password: string): Promise<{ success: boolean; message?: string }> {
+  try {
+    const response = await supabase.auth.signUp({ email, password });
+    console.log('Supabase signUp response:', response);
 
-      return { success: true };
-    } catch (error: any) {
-      return { success: false, message: error.message || 'Login failed' };
+    if (response.error) {
+      return { success: false, message: response.error.message };
     }
+
+    // Extra check if user or session exists
+    if (response.data?.user || response.data?.session) {
+      return { success: true };
+    } else {
+      
+      return { success: true };
+    }
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Sign up failed' };
   }
+}
+
+
+async signInWithEmailPassword(email: string, password: string): Promise<{ success: boolean; message?: string }> {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) return { success: false, message: error.message };
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message || 'Sign in failed' };
+  }
+}
+
+
+
 
   logout(): void {
-    localStorage.removeItem('isAuthenticated');
+    if (this.isBrowser) {
+      localStorage.removeItem('isAuthenticated');
+    }
     this._isAuthenticated.next(false);
     this.router.navigate(['/login']);
   }
