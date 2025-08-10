@@ -99,7 +99,7 @@ export class Database {
     await this.supabase.auth.resetPasswordForEmail(
       email,
       {
-        redirectTo: 'https://mintirho.netlify.app/reset-password'
+        redirectTo: 'https://mintirho.netlify.app/reset-password/'
       });
   }
 

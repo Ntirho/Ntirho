@@ -88,7 +88,7 @@ export class RegistrationForm implements OnInit {
         code: formValue.contact.countryCode,
         cell: formValue.contact.phone,
         date_of_birth: formValue.date_of_birth,
-        sex: formValue.sex === 'Male' ? 'M' : 'F',
+        sex: formValue.sex === 'Male' ? 'M' : formValue.sex === 'Female' ? 'F' : '',
         ethnicity: formValue.ethnicity,
         home_language: formValue.homeLanguage,
         location: formValue.location,

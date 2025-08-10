@@ -125,13 +125,13 @@ export class ProfilePage {
     this.addingInterests = !this.addingInterests;
   }
   onEditDetails(){
-    this.editingDetails = !this.editingDetails;
+    //this.editingDetails = !this.editingDetails;
   }
   onAddEducation(){
     this.addingEducation = !this.addingEducation;
   }
   onEditAbout(){
-    this.editingAbout = ! this.editingAbout;
+    // this.editingAbout = ! this.editingAbout;
   }
 
   onEnterSkill(){
