@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LanguageService } from '../../services/language';
 import { CommonModule } from '@angular/common';
+import { Database } from '../../services/database';
+import { error } from 'console';
 
 @Component({
   selector: 'app-job-posting-form',
@@ -24,7 +26,8 @@ export class JobPostingForm implements OnInit{
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private db: Database
   ) {
     this.form = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(2)]],
@@ -43,7 +46,7 @@ export class JobPostingForm implements OnInit{
   triedValidation = false;
 
   async onSubmit() {
-    this.form.markAllAsTouched;
+    this.form.markAllAsTouched();
 
     if (this.form.invalid){
       this.triedValidation = true;      
@@ -51,31 +54,53 @@ export class JobPostingForm implements OnInit{
 
       return;
     }
+
     this.isLoading = true;
     this.triedValidation = false;
+
     console.log('The form is valid.');
     try {
-      //await this.firebaseService.postJob(this.form.value);
-      //alert(this.translations.jobPostedSuccessDesc);
-      //this.router.navigate(['/']);
+      const results = await this.db.insertJob(this.form.value);
+      if ( results.error ) {
+        console.error('Error while posting a job.', results.error);
+        throw results.error;
+      }
+
+      // Alert the user
+      alert('Your job has been successfully inserted.');
+      
+      // Clear form
+      this.form.reset();
     } catch (error) {
-      //alert(this.translations.jobPostedErrorDesc);
+      console.error('Error while posting a job.', error);
     } finally {
       this.isLoading = false;
     }
   }
 
   toggleSkill(skill: string) {
-    const current = this.form.value.skills;
+    const current = this.form.value.skills ?? [];
     const updated = current.includes(skill)
       ? current.filter((s: string) => s !== skill)
       : [...current, skill];
     this.form.patchValue({ skills: updated });
   }
-
   isSelected(skill: string): boolean {
-    return this.form.value.skills.includes(skill);
+    const skills = this.form.value.skills;
+    return Array.isArray(skills) && skills.includes(skill);
   }
+
+  // toggleSkill(skill: string) {
+  //   const current = this.form.value.skills;
+  //   const updated = current.includes(skill)
+  //     ? current.filter((s: string) => s !== skill)
+  //     : [...current, skill];
+  //   this.form.patchValue({ skills: updated });
+  // }
+
+  // isSelected(skill: string): boolean {
+  //   return this.form.value.skills.includes(skill);
+  // }
 
   getSelectedSkillLabels(): string {
     return this.form.value.skills

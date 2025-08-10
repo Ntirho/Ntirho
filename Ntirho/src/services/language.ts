@@ -10,7 +10,7 @@ export type Language = 'en' | 'se';
 
 const translations = {
   en: {
-        logo: "Mogwebi",
+        logo: "Ntirho",
         language: "English",
         languageOptionSepedi: "Sepedi",
         languageOptionEnglish: "English",
@@ -110,7 +110,7 @@ const translations = {
         close: "Close",
     },
     se: {
-        logo: "Mogwebi",
+        logo: "Ntirho",
         language: "Sepedi",
         languageOptionSepedi: "Sepedi",
         languageOptionEnglish: "English",

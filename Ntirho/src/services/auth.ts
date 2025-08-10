@@ -15,10 +15,11 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+  private userId: number | null = null;
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this._isAuthenticated.asObservable();
 
-  constructor(private router: Router, /* private afAuth: AngularFireAuth */) {
+  constructor(private router: Router, private db: Database) {
     if (typeof window !== 'undefined' && localStorage) {
       const loggedIn = localStorage.getItem('isAuthenticated') === 'true';
       this._isAuthenticated.next(loggedIn);
@@ -34,22 +35,18 @@ export class AuthService {
     this._isAuthenticated.next(true);
   }
 
-  async loginUser(formData: { email: string; password?: string }): Promise<{ success: boolean; message?: string }> {
+  async loginUser(formData: { email: string; password?: string }) {
     try {
       if (formData.password) {
         // Email/password login
-        //await this.afAuth.signInWithEmailAndPassword(formData.email, formData.password);
+        const { data, error} = await this.db.signInWithEmailPassword(formData.email, formData.password);
+        return { data, error };        
       } else {
-        // Magic link or passwordless login (if supported)
-        // await this.afAuth.sendSignInLinkToEmail(formData.email, {
-        //   url: 'http://localhost:4200/login',
-        //   handleCodeInApp: true
-        // });
+        throw 'No password received.';
       }
-
-      return { success: true };
     } catch (error: any) {
-      return { success: false, message: error.message || 'Login failed' };
+      console.error('Error while logging in user.', error);
+      return { success: false, user_id: -1 };
     }
   }
 
@@ -58,4 +55,33 @@ export class AuthService {
     this._isAuthenticated.next(false);
     this.router.navigate(['/login']);
   }
+
+  /**
+   * Functions to handle the userID
+   */
+
+  setUserid(id: number) {
+    this.userId = id;
+  }
+
+  getUserId() {
+    return this.userId;
+  }
+}
+
+
+// Confirm Password
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { Database } from './database';
+
+// export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+//   const password = control.get('password')?.value;
+//   const confirmPassword = control.get('confirmPassword')?.value;
+
+//   return password === confirmPassword ? null : { passwordMismatch: true };
+// }
+export function passwordsMatchValidator(form: AbstractControl): ValidationErrors | null {
+  const password = form.get('password')?.value;
+  const confirm = form.get('confirmPassword')?.value;
+  return password && confirm && password !== confirm ? { mismatch: true } : null;
 }

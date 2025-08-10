@@ -53,18 +53,18 @@
 
         <ng-template #viewDetails>
           <div *ngIf="submittedData" class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
-            <h3 class="text-lg font-semibold text-gray-700">👤 Submitted Personal Details</h3>
-            <p><strong>Full Names:</strong> {{ submittedData.fullNames }}</p>
+            <h3 class="text-lg font-semibold text-gray-700">👤 Personal Details</h3>
+            <p><strong>Full Names:</strong> {{ submittedData.full_names }}</p>
             <p><strong>Email:</strong> {{ submittedData.email }}</p>
-            <p><strong>Contact:</strong> {{ submittedData.contact.countryCode }} {{ submittedData.contact.phone }}</p>
-            <p><strong>Date of Birth:</strong> {{ submittedData.dob | date }}</p>
+            <p><strong>Contact:</strong> {{ submittedData.code }} {{ submittedData.cell }}</p>
+            <p><strong>Date of Birth:</strong> {{ submittedData.date_of_birth | date }}</p>
             <p><strong>Sex:</strong> {{ submittedData.sex }}</p>
             <p><strong>Ethnicity:</strong> {{ submittedData.ethnicity }}</p>
-            <p><strong>Home Language:</strong> {{ submittedData.homeLanguage }}</p>
+            <p><strong>Home Language:</strong> {{ submittedData.home_language }}</p>
             <p><strong>Current Location:</strong> {{ submittedData.location }}</p>
-            <p><strong>Driver's License:</strong> {{ submittedData.hasLicense ? 'Yes' : 'No' }}</p>
-            <p><strong>Living with Disabilities:</strong> {{ submittedData.hasDisability ? 'Yes' : 'No' }}</p>
-            <p *ngIf="submittedData.hasDisability"><strong>Disability Details:</strong> {{ submittedData.disabilityDetails }}</p>
+            <p><strong>Driver's License:</strong> {{ submittedData.driver_license ? 'Yes' : 'No' }}</p>
+            <p><strong>Living with Disabilities:</strong> {{ submittedData.has_disability ? 'Yes' : 'No' }}</p>
+            <p *ngIf="submittedData.has_disability"><strong>Disability Details:</strong> {{ disability }}</p>
           </div>
 
         </ng-template>
@@ -79,16 +79,16 @@
         </div>
         
         <ng-container *ngIf="addingEducation">
-          <app-education-form></app-education-form>
+          <app-education-form [userId]="user_id"></app-education-form>
         </ng-container>
 
-        <div class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
-            <h3 class="text-lg font-semibold text-gray-700">📘 Dummy Education Preview</h3>
+        <div *ngFor="let dummyEducation of qualifications; let i = index" class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
+            <h3 class="text-lg font-semibold text-gray-700">📘 Education {{ i + 1 }}</h3>
             <p><strong>Institution:</strong> {{ dummyEducation.institution }}</p>
             <p><strong>Qualification:</strong> {{ dummyEducation.qualification }}</p>
-            <p><strong>Start Date:</strong> {{ dummyEducation.startDate | date }}</p>
-            <p><strong>Completion Date:</strong> {{ dummyEducation.completionDate | date }}</p>
-            <p><strong>Academic Average:</strong> {{ dummyEducation.academicAverage }}%</p>
+            <p><strong>Start Date:</strong> {{ dummyEducation.start_date | date }}</p>
+            <p><strong>Completion Date:</strong> {{ dummyEducation.completion_date | date }}</p>
+            <p><strong>Academic Average:</strong> {{ dummyEducation.average }}%</p>
           </div>
     </div>
 

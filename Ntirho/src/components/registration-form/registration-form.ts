@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
 import { LanguageService } from '../../services/language';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { isValid } from 'zod';
+import { Database } from '../../services/database';
+import { User } from '../../interfaces';
 
 @Component({
   selector: 'app-registration-form',
@@ -24,23 +26,34 @@ export class RegistrationForm implements OnInit {
 
   showDisabilityDetails = false;
 
+  // Input for the form
+  @Input() user_id!: number;
+  @Input() email!: string;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private db: Database
   ) { }
 
   ngOnInit () {
     this.translations = this.languageService.translations;
 
     this.personalDetailsForm = this.fb.group({
-      fullNames: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      fullNames: ['', [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z ]{2,}$/)
+      ]],
+      email: [this.email, [Validators.required, Validators.email]],
       contact: this.fb.group({
         countryCode: ['+27', Validators.required],
-        phone: ['', Validators.required],
+        phone: ['', [
+          Validators.required,
+          Validators.pattern(/^\d{9,10}$/)
+        ]],
       }),
-      dob: ['', Validators.required],
+      date_of_birth: ['', Validators.required],
       sex: ['', Validators.required],
       ethnicity: ['', Validators.required],
       homeLanguage: ['', Validators.required],
@@ -60,8 +73,45 @@ export class RegistrationForm implements OnInit {
 
   // Boolean to control visiblity of required
   isValidated = true;
+  
   async onSubmit() {
+    // Run the test
+    //await this.db.testInsert();
+
     if (this.personalDetailsForm.valid) {
+      // Insert the user
+      const formValue = this.personalDetailsForm.value;
+
+      const userPayload = {
+        full_names: formValue.fullNames,
+        email: formValue.email,
+        code: formValue.contact.countryCode,
+        cell: formValue.contact.phone,
+        date_of_birth: formValue.date_of_birth,
+        sex: formValue.sex === 'Male' ? 'M' : 'F',
+        ethnicity: formValue.ethnicity,
+        home_language: formValue.homeLanguage,
+        location: formValue.location,
+        driver_license: formValue.hasLicense,
+        has_disability: formValue.hasDisability,
+        date_created: new Date().toISOString()
+      };
+
+        try {
+          const result = await this.db.insertUser(userPayload);
+
+          if (result.error)
+            throw result.error;
+
+          // Notify the user 
+          alert('You have been successfully registered.');
+
+          // Redirect them to the Landing page
+          this.router.navigate(['/']);
+        } catch (error) {
+          console.error('Error while inserting user.', error);
+        }
+
       console.log('Form Submitted:', this.personalDetailsForm.value);
       this.isValidated = true;
     } else {

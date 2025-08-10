@@ -1,4 +1,4 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, NgModule, OnInit } from '@angular/core';
 import { LanguageService } from '../../../services/language';
 import { ProfileForm } from "../../../components/profile-form/profile-form";
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,9 @@ import { RouterOutlet } from '@angular/router';
 import { RegistrationForm } from '../../../components/registration-form/registration-form';
 import { EducationForm } from "../../../components/education-form/education-form";
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Education, User } from '../../../interfaces';
+import { Database } from '../../../services/database';
+import { AuthService } from '../../../services/auth';
 
 @Component({
   selector: 'app-profile-page',
@@ -41,37 +44,58 @@ export class ProfilePage {
   interestForm = new FormControl('', Validators.required);
 
   // Dummy data
-  qualifications: any = [];
-  dummyEducation = {
-    institution: 'Lancea Vale Secondary School',
-    qualification: 'Matric',
-    startDate: '2018-01-15',
-    completionDate: '2022-12-01',
-    academicAverage: 78
-  };
-  submittedData = {
-    fullNames: 'Thabo Mbeki',
-    email: 'thabo.m@example.com',
-    contact: {
-      countryCode: '+27',
-      phone: '0781234567',
-    },
-    dob: '1990-06-15',
-    sex: 'male',
-    ethnicity: 'black',
-    homeLanguage: 'sepedi',
-    location: 'Polokwane',
-    hasLicense: true,
-    hasDisability: true,
-    disabilityDetails: 'Visual impairment',
-  };
+  qualifications: Education[] = [];
+  submittedData!: User;
+  disability!: string;
+
+  // Get the user_id
+  user_id: number = 1;
 
   constructor(private languageService: LanguageService,
-              private fb: FormBuilder
+              private fb: FormBuilder,
+              private db: Database,
+              private cdr: ChangeDetectorRef,
+              private auth: AuthService
   ) {}
 
   ngOnInit() {
     this.translations = this.languageService.translations;
+
+    // Update the user_id
+    this.user_id = this.auth.getUserId() ?? 1; 
+    console.log('User id', this.user_id);
+
+    // Call the fetch data
+    this.fetchData();
+  }
+
+  // Function to fetch data
+  async fetchData() {
+    // Fetch user details
+    await this.db.getUser(this.user_id).then(({user, error}) => {
+      if (error){
+        console.error('Error while fetching user.', error);
+        return;
+      }
+
+      this.submittedData = user;
+
+      // Notify the UI of the changes
+      this.cdr.detectChanges();
+    });
+
+    // Fetch education
+    await this.db.getEducation(this.user_id).then((data) => {
+      if (!data){
+        console.warn('No data for education for the current user.');
+        return;
+      }
+
+      this.qualifications = data;
+
+      // Notify the UI
+      this.cdr.detectChanges();
+    });
   }
 
   handleProfileUpdate(values: any) {
