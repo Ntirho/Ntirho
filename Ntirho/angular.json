@@ -16,7 +16,6 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/_redirects",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -36,7 +35,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
+                  "maximumWarning": "700kB",
                   "maximumError": "1MB"
                 },
                 {
