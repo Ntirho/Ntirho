@@ -37,7 +37,7 @@ export class Header implements OnInit {
     // this.isAuthenticated = this.authService.isAuthenticated();
     //this.pathname = this.router.url;
 
-    // SUbscribe the value of isAuthenticated
+    // Subscribe the value of isAuthenticated
     this.authService.isLoggedIn$.subscribe(status => {
       this.isAuthenticated = status;
       this.cdr.detectChanges();
@@ -53,6 +53,9 @@ export class Header implements OnInit {
     this.languageService.setLanguage(lang);
     this.translations = this.languageService.translations;
     this.langMenuOpen = false;
+
+    // Notify the UI
+    this.cdr.detectChanges();
   }
 
   logout() {

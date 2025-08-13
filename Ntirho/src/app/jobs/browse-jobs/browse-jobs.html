@@ -11,7 +11,7 @@
       </div>
 
       <div class="p-4 rounded-lg bg-card bg-neutral-50 shadow-sm">
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-4 items-end">
           <div class="grid gap-1.5">
             <label class="text-sm font-medium">{{ translations.locationLabel }}</label>
             <input
@@ -23,13 +23,15 @@
 
           <div class="grid gap-1.5">
             <label class="text-sm font-medium">{{ translations.skillsLabel }}</label>
-            <select class="select rounded-lg h-10 px-2.5 bg-cyan-100" [(ngModel)]="skillFilter">
+            <select class="select rounded-lg h-10 px-2.5 bg-cyan-100 cursor-pointer" [(ngModel)]="skillFilter">
               <option value="all">{{ translations.allSkills }}</option>
               <option *ngFor="let skill of skillsList" [value]="skill.value">{{ skill.label }}</option>
             </select>
           </div>
+        </div>
 
-          <button class="btn btn-outline w-full sm:w-auto hover:bg-orange-400 cursor-pointer bg-cyan-100 h-8 rounded-lg" (click)="clearFilters()">
+        <div class="flex m-4 justify-center items-center">
+          <button class="w-md items-center hover:bg-orange-400 cursor-pointer bg-cyan-100 h-12 p-2 m-2 rounded-lg" (click)="clearFilters()">
             <i class="bx bx-filter mr-2 h-4 w-4"></i>
             {{ translations.clearFilters }}
           </button>

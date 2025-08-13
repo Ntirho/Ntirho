@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+
 export interface Job {
   job_id: number;
   title: string;
@@ -5,6 +7,7 @@ export interface Job {
   location: string;
   description: string;
   skills: string[];
+  date_posted?: string;
 }
 
 export interface ProfileFormValues {
@@ -31,6 +34,117 @@ export interface JobMatchesInput {
   skills: string[];         // e.g. ['retail', 'hospitality']
   preferences: string[];    // e.g. ['Polokwane', 'full-time']
 }
+
+/**
+ * The following interface are for the tables (DB)
+ */
+export interface User {
+  user_id?: number;
+  full_names: string;
+  date_of_birth: string;
+  email: string;
+  code: string;
+  cell: string;
+  sex: string;
+  ethnicity?: string;
+  home_language?: string;
+  location?: string;
+  driver_license: boolean;
+  has_disability: boolean;
+  date_created?: string; // ISO timestamp
+}
+
+export interface AppUser {
+  id?: string; // UUID from auth.users
+  full_names: string;
+  date_of_birth: string; // 'YYYY-MM-DD'
+  email: string;
+  code: string;
+  cell: string;
+  sex: string;
+  ethnicity?: string;
+  home_language?: string;
+  location?: string;
+  driver_license: boolean;
+  has_disability: boolean;
+  date_created?: string; // ISO timestamp
+}
+
+
+export interface UserAttributes {
+  user_id: string;
+  skills: string[];
+  interests: string[];
+  about: string;
+  date_updated?: string;
+}
+
+export interface Disability {
+  user_id: string;
+  disability: string;
+  date_created?: string;
+}
+
+// export interface Job {
+//   job_id: number;
+//   company: string;
+//   location: string;
+//   description: string;
+//   skills: string[];
+//   date_posted?: string;
+// }
+
+export interface Education {
+  qualification_id: number;
+  user_id: string;
+  institution?: string;
+  qualification?: string;
+  start_date?: string;
+  completion_date?: string;
+  average?: number;
+  date_created?: string;
+}
+
+export interface Experience {
+  experience_id: number;
+  user_id: number;
+  title?: string;
+  description?: string;
+  start_date?: string;
+  end_date?: string;
+  date_created?: string;
+}
+
+export interface Certificate {
+  certificate_id: number;
+  user_id: number;
+  title: string;
+  issuer?: string;
+  issue_date?: string;
+  expiry_date?: string;
+  credential_url?: string;
+  date_created?: string;
+}
+
+/**
+ * End of interfaces for the tables (DB)
+ */
+
+export const homeLanguages = [
+  'Afrikaans',
+  'English',
+  'isiNdebele',
+  'isiXhosa',
+  'isiZulu',
+  'Sepedi',
+  'Sesotho',
+  'Setswana',
+  'siSwati',
+  'Tshivenda',
+  'Xitsonga',
+  'South African Sign Language'
+];
+
 
 export const dummyJobs : Job[] = [
   {

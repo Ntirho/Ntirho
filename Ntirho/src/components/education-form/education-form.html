@@ -1,4 +1,4 @@
-<form formGroup="form" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
 
   <!-- Institution -->
   <div class="flex flex-col">
@@ -9,6 +9,9 @@
       placeholder="e.g. Lancea Vale Secondary School"
       class="bg-gray-200 h-8 p-2 rounded"
     />
+    <div *ngIf="form.get('institution')?.invalid && form.get('institution')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
   </div>
 
   <!-- Qualification -->
@@ -18,34 +21,47 @@
       <option value="">Select</option>
       <option *ngFor="let q of qualifications" [value]="q">{{ q }}</option>
     </select>
+    <div *ngIf="form.get('qualification')?.invalid && form.get('qualification')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
   </div>
 
   <!-- Start Date -->
   <div class="flex flex-col">
     <label class="font-medium">Start Date</label>
-    <input type="date" formControlName="startDate" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <input type="date" formControlName="start_date" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <div *ngIf="form.get('startDate')?.invalid && form.get('startDate')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
   </div>
 
   <!-- Completion Date -->
   <div class="flex flex-col">
     <label class="font-medium">Completion Date</label>
-    <input type="date" formControlName="completionDate" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <input type="date" formControlName="completion_date" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <div *ngIf="form.get('completionDate')?.invalid && form.get('completionDate')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
   </div>
 
   <!-- Academic Average -->
   <div class="flex flex-col">
     <label class="font-medium">Academic Average</label>
-    <input type="range" formControlName="academicAverage" min="0" max="100" class="bg-gray-200 h-2 rounded-full cursor-pointer" />
-    <span class="text-sm text-gray-600 mt-1">{{ form.value.academicAverage }}%</span>
+    <input type="range" formControlName="average" min="0" max="100" class="bg-gray-200 h-2 rounded-full cursor-pointer" />
+    <span class="text-sm text-gray-600 mt-1">{{ form.get('average')?.value }}%</span>
+    <div *ngIf="form.get('average')?.invalid && form.get('average')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
   </div>
 
   <!-- Submit Button -->
 <div class="flex flex-col justify-center">
   <button
-    type="submit" (submit)="onSubmit()" [disabled]="!form.invalid"
+    type="submit"
     class="bg-amber-500 hover:bg-amber-400 text-white px-6 py-2 rounded cursor-pointer"
   >
-    Save Education
+    <span *ngIf="isLoading">Saving...</span>
+    <span *ngIf="!isLoading">Save Education</span>
   </button>
 </div>
 
