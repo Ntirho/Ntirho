@@ -1,25 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { LanguageService } from '../../services/language';
-import { AuthService } from '../../services/auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-// Skills list defined OUTSIDE the component
-const skillsList = [
-  { label: "Construction", value: "construction" },
-  { label: "Farming", value: "farming" },
-  { label: "Retail", value: "retail" },
-  { label: "Hospitality", value: "hospitality" },
-  { label: "Driving", value: "driving" },
-  { label: "Domestic Work", value: "domestic_work" },
-  { label: "Other", value: "other" },
-] as const;
+import { isValid } from 'zod';
+import { Database } from '../../services/database';
+import { Disability, User } from '../../interfaces';
+import { passwordsMatchValidator } from '../../services/auth';
 
 @Component({
   selector: 'app-registration-form',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule
@@ -32,31 +23,38 @@ export class RegistrationForm implements OnInit {
   isLoading = false;
   showSkills = true;
   translations: any = {};
+  skillsList = skillsList;
+
   showDisabilityDetails = false;
 
-  //  Now references the constant above
-  skillsList = skillsList;
+  // Input for the form
+  @Input() user_id!: number;
+  @Input() email!: string;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private languageService: LanguageService,
-    private authService: AuthService
-  ) {}
+    private db: Database
+  ) { }
 
-  ngOnInit() {
+  ngOnInit () {
     this.translations = this.languageService.translations;
 
     this.personalDetailsForm = this.fb.group({
-      fullNames: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      fullNames: ['', [
+        Validators.required, 
+        Validators.pattern(/^[a-zA-Z ]{2,}$/)
+      ]],
+      email: [this.email, [Validators.required, Validators.email]],
       contact: this.fb.group({
         countryCode: ['+27', Validators.required],
-        phone: ['', Validators.required],
+        phone: ['', [
+          Validators.required,
+          Validators.pattern(/^\d{9,10}$/)
+        ]],
       }),
-      dob: ['', Validators.required],
+      date_of_birth: ['', Validators.required],
       sex: ['', Validators.required],
       ethnicity: ['', Validators.required],
       homeLanguage: ['', Validators.required],
@@ -64,8 +62,14 @@ export class RegistrationForm implements OnInit {
       hasLicense: [false],
       hasDisability: [false],
       disabilityDetails: [''],
-      skills: [[]], // initial value is an empty array
-    });
+      password: ['', [
+        Validators.required,
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+      ]],
+      confirmPassword: ['', Validators.required]
+      }, {
+        validators: passwordsMatchValidator    // For confirming the passwords
+      })
 
     this.personalDetailsForm.get('hasDisability')?.valueChanges.subscribe(val => {
       this.showDisabilityDetails = val;
@@ -75,53 +79,98 @@ export class RegistrationForm implements OnInit {
     });
   }
 
-  // Boolean to control validation display
+  // Boolean to control visiblity of required
   isValidated = true;
+  
+  async onSubmit() {
+    // Run the test
+    //await this.db.testInsert();
 
-async onSubmit() {
-  if (this.personalDetailsForm.invalid) {
-    this.isValidated = false;
-    return;
-  }
+    if (this.personalDetailsForm.valid) {
+      // Insert the user
+      const formValue = this.personalDetailsForm.value;
 
-  this.isLoading = true;
-  const formData = this.personalDetailsForm.value;
+      const userPayload = {
+        full_names: formValue.fullNames,
+        email: formValue.email,
+        code: formValue.contact.countryCode,
+        cell: formValue.contact.phone,
+        date_of_birth: formValue.date_of_birth,
+        sex: formValue.sex === 'male' ? 'M' : formValue.sex === 'female' ? 'F' : '',
+        ethnicity: formValue.ethnicity,
+        home_language: formValue.homeLanguage,
+        location: formValue.location,
+        driver_license: formValue.hasLicense,
+        has_disability: formValue.hasDisability,
+        date_created: new Date().toISOString()
+      };
+      const email = formValue.email;
+      const password = formValue.password;
 
-  // Check if passwords match
-  if (formData.password !== formData.confirmPassword) {
-    alert("Passwords do not match.");
-    this.isLoading = false;
-    return;
-  }
+      try {
+        // const result = await this.db.insertUser(userPayload);
 
-  try {
-    const result = await this.authService.signUp(formData.email, formData.password);
+        // if (result.error)
+        //   throw result.error;
 
-    if (result.success) {
-      alert('Registration successful! Please check your email to verify your account.');
-      this.personalDetailsForm.reset();
-      this.router.navigate(['/']);
+        // // Notify the user 
+        // alert('You have been successfully registered.');
+
+        // // Redirect them to the Landing page
+        // this.router.navigate(['/']);
+
+        // Sign up
+        const { data, error } = await this.db.signUpWithEmailPasswordMetadata(email, password, userPayload);
+
+        // Check for errors
+        if(error)
+          throw error;
+
+        // Disability insertion
+        if (userPayload.has_disability && data.user){
+          // Get the user's id
+          const id = data.user.id;
+
+          // Create a disability payload
+          const disabilityPayload: Disability = {
+            user_id: id,
+            disability: formValue.disabilityDetails,
+            date_created: new Date().toISOString()
+          };
+          console.log(disabilityPayload);
+
+          // Insert the disability
+          const result = await this.db.insertDisability(disabilityPayload);
+          if (result.error)
+            console.log("Error while inserting disability.", result.error);
+        }
+
+        // Notify the user
+        alert('Your account has been successfully created.')
+
+        // Redirect them to the Landing page
+        this.router.navigate(['/']);
+
+        // Clear form
+        this.personalDetailsForm.reset();
+      } 
+      catch (error) {
+        console.error('Error while inserting user.', error);
+      }
+
+      console.log('Form Submitted:', this.personalDetailsForm.value);
+      this.isValidated = true;
     } else {
-      // Handle the error message returned from signUp
-      alert(result.message || 'Registration failed. Please try again.');
+      console.log('Form Invalid');
+      this.isValidated = false;
     }
-  } catch (err) {
-    console.error(err);
-    alert('An unexpected error occurred. Please try again.');
-  } finally {
-    this.isLoading = false;
   }
-}
 
-
-
-
-  // Skills checkbox logic
   toggleSkill(skill: string) {
-    const currentSkills = this.personalDetailsForm.value.skills;
-    const updated = currentSkills.includes(skill)
-      ? currentSkills.filter((s: string) => s !== skill)
-      : [...currentSkills, skill];
+    const current = this.personalDetailsForm.value.skills;
+    const updated = current.includes(skill)
+      ? current.filter((s: string) => s !== skill)
+      : [...current, skill];
     this.personalDetailsForm.patchValue({ skills: updated });
   }
 
@@ -129,3 +178,14 @@ async onSubmit() {
     return this.personalDetailsForm.value.skills.includes(skill);
   }
 }
+
+
+const skillsList = [
+  { label: "Construction", value: "construction" },
+  { label: "Farming", value: "farming" },
+  { label: "Retail", value: "retail" },
+  { label: "Hospitality", value: "hospitality" },
+  { label: "Driving", value: "driving" },
+  { label: "Domestic Work", value: "domestic_work" },
+  { label: "Other", value: "other" },
+] as const;

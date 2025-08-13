@@ -6,37 +6,63 @@
   <div class="flex flex-col">
     <label class="font-medium">Full Names</label>
     <input type="text" formControlName="fullNames" class="bg-gray-200 h-8 p-2 rounded" />
-    <div *ngIf="personalDetailsForm.get('fullNames')?.invalid && (personalDetailsForm.get('fullNames')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required. Only letters.
+    <div 
+      *ngIf="personalDetailsForm.get('fullNames')?.errors && 
+            (personalDetailsForm.get('fullNames')?.touched || !isValidated)" 
+      class="text-red-500 text-sm"
+    >
+      <span *ngIf="personalDetailsForm.get('fullNames')?.errors?.['required']">
+        Required. Please enter your full name.
+      </span>
+      <span *ngIf="personalDetailsForm.get('fullNames')?.errors?.['pattern']">
+        Only letters and spaces allowed. Minimum 2 characters.
+      </span>
     </div>
+
   </div>
 
   <!-- Email -->
   <div class="flex flex-col">
     <label class="font-medium">Email</label>
     <input type="email" formControlName="email" class="bg-gray-200 h-8 p-2 rounded" />
-    <div *ngIf="personalDetailsForm.get('email')?.invalid && (personalDetailsForm.get('email')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required. Please enter a valid email address.
+    <div 
+      *ngIf="personalDetailsForm.get('email')?.errors && 
+            (personalDetailsForm.get('email')?.touched || !isValidated)" 
+      class="text-red-500 text-sm"
+    >
+      <span *ngIf="personalDetailsForm.get('email')?.errors?.['required']">
+        Required. Please enter your email address.
+      </span>
+      <span *ngIf="personalDetailsForm.get('email')?.errors?.['email']">
+        Invalid format. Please enter a valid email address.
+      </span>
     </div>
+
   </div>
 
-  <!-- Password -->
-  <div class="flex flex-col">
-    <label class="font-medium">Password</label>
-    <input type="password" formControlName="password" class="bg-gray-200 h-8 p-2 rounded" />
-    <div *ngIf="personalDetailsForm.get('password')?.invalid && (personalDetailsForm.get('password')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required.
-    </div>
+<!-- Password -->
+<div class="flex flex-col">
+  <label class="font-medium">Password</label>
+  <input type="password" formControlName="password" class="h-8 bg-gray-200 rounded-sm p-2"/>
+  <div *ngIf="personalDetailsForm.get('password')?.errors?.['required'] && personalDetailsForm.get('password')?.touched" class="text-red-500 text-sm">
+    Password is required.
   </div>
+  <div *ngIf="personalDetailsForm.get('password')?.errors?.['pattern'] && personalDetailsForm.get('password')?.touched" class="text-red-500 text-sm">
+    Must be at least 8 characters, include uppercase, lowercase, number, and special character.
+  </div>
+</div>
 
-  <!-- Confirm Password -->
-  <div class="flex flex-col">
-    <label class="font-medium">Confirm Password</label>
-    <input type="password" formControlName="confirmPassword" class="bg-gray-200 h-8 p-2 rounded" />
-    <div *ngIf="personalDetailsForm.get('confirmPassword')?.invalid && (personalDetailsForm.get('confirmPassword')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required. Passwords must match.
-    </div>
+<!-- Confirm password -->
+<div class="flex flex-col">
+  <label class="font-medium">Confirm Password</label>
+  <input type="password" formControlName="confirmPassword" class="h-8 bg-gray-200 rounded-sm p-2"/>
+  <div *ngIf="personalDetailsForm.hasError('mismatch') && personalDetailsForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
+    Passwords do not match.
   </div>
+  <div *ngIf="personalDetailsForm.get('confirmPassword')?.errors?.['required'] && personalDetailsForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
+    Confirm password is required.
+  </div>
+</div>
 
   <!-- Contact Details -->
   <div class="flex flex-col">
@@ -48,10 +74,20 @@
         <option value="+234">+234</option>
       </select>
       <div class="flex flex-col">
-        <input type="tel" formControlName="phone" class="bg-gray-200 h-8 p-2 rounded w-2/3" placeholder="078 *** ****" />
-        <div *ngIf="personalDetailsForm.get('contact.phone')?.invalid && (personalDetailsForm.get('contact.phone')?.touched || !isValidated)" class="text-red-500 text-sm">
-          Required. Please enter a valid cell number.
-        </div>
+        <input type="tel" formControlName="phone" class="bg-gray-200 h-8 p-2 rounded w-2/3" placeholder="78 *** ****" />
+        <div 
+        *ngIf="personalDetailsForm.get('contact.phone')?.errors && 
+              (personalDetailsForm.get('contact.phone')?.touched || !isValidated)" 
+        class="text-red-500 text-sm"
+      >
+        <span *ngIf="personalDetailsForm.get('contact.phone')?.errors?.['required']">
+          Required. Please enter your cell number.
+        </span>
+        <span *ngIf="personalDetailsForm.get('contact.phone')?.errors?.['pattern']">
+          Invalid format. Please enter a valid 9-digit cell number.
+        </span>
+      </div>
+
       </div>
     </div>
   </div>
@@ -59,7 +95,7 @@
   <!-- Date of Birth -->
   <div class="flex flex-col">
     <label class="font-medium">Date of Birth</label>
-    <input type="date" formControlName="dob" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <input type="date" formControlName="date_of_birth" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
     <div *ngIf="personalDetailsForm.get('dob')?.invalid && (personalDetailsForm.get('dob')?.touched || !isValidated)" class="text-red-500 text-sm">
       Required.
     </div>
@@ -83,10 +119,10 @@
     <label class="font-medium">Ethnicity</label>
     <select formControlName="ethnicity" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
       <option value="">Select</option>
-      <option value="black">African</option>
-      <option value="white">White</option>
-      <option value="coloured">Coloured</option>
-      <option value="indian">Indian</option>
+      <option value="African">African</option>
+      <option value="White">White</option>
+      <option value="Coloured">Coloured</option>
+      <option value="Indian">Indian</option>
     </select>
     <div *ngIf="personalDetailsForm.get('ethnicity')?.invalid && (personalDetailsForm.get('ethnicity')?.touched || !isValidated)" class="text-red-500 text-sm">
       Required.
@@ -98,9 +134,9 @@
     <label class="font-medium">Home Language</label>
     <select formControlName="homeLanguage" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
       <option value="">Select</option>
-      <option value="sepedi">Sepedi</option>
-      <option value="tsonga">Tsonga</option>
-      <option value="tshivenda">Tshivenda</option>
+      <option value="Sepedi">Sepedi</option>
+      <option value="Xitsonga">Xitsonga</option>
+      <option value="Tshivenda">Tshivenda</option>
     </select>
     <div *ngIf="personalDetailsForm.get('homeLanguage')?.invalid && (personalDetailsForm.get('homeLanguage')?.touched || !isValidated)" class="text-red-500 text-sm">
       Required. 
@@ -112,7 +148,7 @@
     <label class="font-medium">Current Location</label>
     <input type="text" formControlName="location" class="bg-gray-200 h-8 p-2 rounded" />
     <div *ngIf="personalDetailsForm.get('location')?.invalid && (personalDetailsForm.get('location')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required. Only letters.
+      Required.
     </div>
   </div>
 
@@ -138,9 +174,10 @@
 
   <!-- Submit -->
   <div class="flex flex-col justify-center">
-    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded cursor-pointer transition" [disabled]="isLoading">
-    Submit
-  </button>
+    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded cursor-pointer transition">
+      <span *ngIf="isLoading">Posting...</span>
+      <span *ngIf="!isLoading">Submit</span>
+    </button>
   </div>
 </form>
 

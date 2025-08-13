@@ -6,8 +6,7 @@ import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-post-job',
   imports: [
-    JobPostingForm,
-    RouterOutlet
+    JobPostingForm
 ],
   templateUrl: './post-job.html',
   styleUrl: './post-job.css'

@@ -1,6 +1,6 @@
 export const Translation = {
     en: {
-        logo: "Mogwebi",
+        logo: "Ntirho",
         language: "English",
         languageOptionSepedi: "Sepedi",
         languageOptionEnglish: "English",
@@ -13,7 +13,7 @@ export const Translation = {
         footerContact: "Contact Us",
         footerPrivacy: "Privacy Policy",
         footerTraining: "Training Resources",
-        footerRights: "© 2024 Mogwebi. All rights reserved.",
+        footerRights: "© 2024 Ntirho. All rights reserved.",
         postJobTitle: "Post a New Job",
         jobTitleLabel: "Job Title",
         jobTitlePlaceholder: "e.g., General Worker",
@@ -100,7 +100,7 @@ export const Translation = {
         close: "Close",
     },
     se: {
-        logo: "Mogwebi",
+        logo: "Ntirho",
         language: "Sepedi",
         languageOptionSepedi: "Sepedi",
         languageOptionEnglish: "English",
@@ -113,7 +113,7 @@ export const Translation = {
         footerContact: "Ikgokaganye le rena",
         footerPrivacy: "Pholisi ya Sephiri",
         footerTraining: "Methopo ya Tlhahlo",
-        footerRights: "© 2024 Mogwebi. Ditokelo ka moka di lotilwe.",
+        footerRights: "© 2024 Ntirho. Ditokelo ka moka di lotilwe.",
         postJobTitle: "Romela Mošomo o Mofsa",
         jobTitleLabel: "Thaetlele ya Mošomo",
         jobTitlePlaceholder: "mohl., Mošomi wa Kakaretšo",

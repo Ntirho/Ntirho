@@ -1,13 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, OnInit, Output } from '@angular/core';
 import { LanguageService } from '../../services/language';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-voice-search',
   imports: [
-    CommonModule,
-    RouterLink
+    CommonModule
 ],
   templateUrl: './voice-search.html',
   styleUrl: './voice-search.css',

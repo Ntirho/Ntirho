@@ -1,25 +1,28 @@
-// src/services/auth.ts
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+// import { Injectable } from '@angular/core';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class Auth {
+  
+// }
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { supabase } from '../supabase/supabaseClient';
-import { isPlatformBrowser } from '@angular/common';
+//import { AngularFireAuth } from '@angular/fire/combat/auth'; 
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
+  private userId!: string;
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this._isAuthenticated.asObservable();
-  private isBrowser: boolean;
 
-  constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-
-    if (this.isBrowser) {
+  constructor(private router: Router, private db: Database) {
+    if (typeof window !== 'undefined' && localStorage) {
       const loggedIn = localStorage.getItem('isAuthenticated') === 'true';
       this._isAuthenticated.next(loggedIn);
-    } else {
-      // On server, set to false or handle differently if needed
-      this._isAuthenticated.next(false);
     }
   }
 
@@ -28,52 +31,68 @@ export class AuthService {
   }
 
   login(): void {
-    if (this.isBrowser) {
-      localStorage.setItem('isAuthenticated', 'true');
-    }
+    localStorage.setItem('isAuthenticated', 'true');
     this._isAuthenticated.next(true);
   }
 
-async signUp(email: string, password: string): Promise<{ success: boolean; message?: string }> {
-  try {
-    const response = await supabase.auth.signUp({ email, password });
-    console.log('Supabase signUp response:', response);
-
-    if (response.error) {
-      return { success: false, message: response.error.message };
+  async loginUser(formData: { email: string; password?: string }) {
+    try {
+      if (formData.password) {
+        // Email/password login
+        const { data, error} = await this.db.signInWithEmailPassword(formData.email, formData.password);
+        return { data, error };        
+      } else {
+        throw 'No password received.';
+      }
+    } catch (error: any) {
+      console.error('Error while logging in user.', error);
+      return { success: false, user_id: -1 };
     }
-
-    // Extra check if user or session exists
-    if (response.data?.user || response.data?.session) {
-      return { success: true };
-    } else {
-      
-      return { success: true };
-    }
-  } catch (error: any) {
-    return { success: false, message: error.message || 'Sign up failed' };
   }
-}
-
-
-async signInWithEmailPassword(email: string, password: string): Promise<{ success: boolean; message?: string }> {
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return { success: false, message: error.message };
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, message: error.message || 'Sign in failed' };
-  }
-}
-
-
-
 
   logout(): void {
-    if (this.isBrowser) {
-      localStorage.removeItem('isAuthenticated');
-    }
+    localStorage.removeItem('isAuthenticated');
     this._isAuthenticated.next(false);
-    this.router.navigate(['/login']);
+    
+    // Need to remove the user_id
+    this.removeUserID();
   }
+
+  /**
+   * Functions to handle the userID
+   * Use of localStorage
+   */
+
+  setUserId(id: string) {
+    this.userId = id;
+
+    localStorage.setItem("user_id", id);
+  }
+
+  getUserId() {
+    //return this.userId;
+
+    return localStorage.getItem("user_id");
+  }
+
+  removeUserID() {
+    localStorage.removeItem("user_id");
+  }
+}
+
+
+// Confirm Password
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { Database } from './database';
+
+// export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+//   const password = control.get('password')?.value;
+//   const confirmPassword = control.get('confirmPassword')?.value;
+
+//   return password === confirmPassword ? null : { passwordMismatch: true };
+// }
+export function passwordsMatchValidator(form: AbstractControl): ValidationErrors | null {
+  const password = form.get('password')?.value;
+  const confirm = form.get('confirmPassword')?.value;
+  return password && confirm && password !== confirm ? { mismatch: true } : null;
 }
