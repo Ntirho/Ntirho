@@ -3,14 +3,15 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Disability, Certificate, Education, Experience, Job, UserAttributes, User, AppUser } from '../interfaces';
 import { UUID } from 'crypto';
 import { abort } from 'process';
+import { environment } from '../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Database {
   // Create a single supabase client for interacting with your database
-  private url = 'https://arakkkodaczdppbpzlyo.supabase.co';
-  private key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyYWtra29kYWN6ZHBwYnB6bHlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3NDkwNTEsImV4cCI6MjA3MDMyNTA1MX0.lWP6C24QD87XjPJaW8xoM4quWuUndYLyefVQ6ED4KPY';
+  private url = environment.SUPABASE_URL;
+  private key = environment.SUPABASE_KEY;
   public supabase: SupabaseClient;
 
   constructor(){
