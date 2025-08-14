@@ -1,5 +1,5 @@
 <div class="text-gray-700">
-  <div class="flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300 bg-neutral-50 rounded">
+  <div class="flex flex-col h-[300px] justify-between shadow-lg hover:shadow-xl transition-shadow duration-300 bg-neutral-50 rounded">
     <div class="p-4">
       <h2 class="text-xl font-bold font-headline text-black">{{ job.title }}</h2>
       <p class="flex items-center gap-2 pt-1 text-muted-foreground">
@@ -11,7 +11,7 @@
     </div>
 
     <div class="p-4 flex-grow">
-      <p class="text-sm text-muted-foreground line-clamp-3">{{ job.description }}</p>
+      <p class="text-sm text-muted-foreground line-clamp-2">{{ job.description }}</p>
       <div class="flex flex-wrap gap-2 pt-4 px-0.5">
         <span *ngFor="let skill of job.skills" class="rounded-2xl px-2 h-8 bg-gray-300 ">
           {{ skill }}
