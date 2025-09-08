@@ -1,26 +1,28 @@
 <div class="flex flex-col min-h-screen bg-gray-50 text-gray-900">
-
   <main class="flex-1 container mx-auto px-4 py-8 space-y-8">
     <div class="text-center">
-      <h1 class="text-4xl font-bold">Your Job Matches</h1>
+      <h1 class="text-4xl font-bold">{{ translations[currentLang]?.jobMatchesTitle }}</h1>
       <p class="mt-2 text-lg text-gray-600 flex items-center justify-center gap-2">
-        👤 Welcome back! Here are your latest matches.
+        👤 {{ translations[currentLang]?.welcomeMessage }}
       </p>
     </div>
 
     <ng-container *ngIf="isLoading">
       <div class="flex justify-center items-center py-12">
         <div class="animate-spin h-12 w-12 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-        <p class="ml-4 text-lg text-gray-500">Finding jobs for you...</p>
+        <p class="ml-4 text-lg text-gray-500">{{ translations[currentLang]?.loadingMessage }}</p>
       </div>
     </ng-container>
 
     <ng-container *ngIf="error">
       <div class="text-center py-12 bg-red-100 border border-red-300 text-red-700 rounded-lg">
-        <h2 class="text-2xl font-semibold">Oops! Something went wrong</h2>
+        <h2 class="text-2xl font-semibold">{{ translations[currentLang]?.errorTitle }}</h2>
         <p class="mt-2">{{ error }}</p>
-        <button (click)="fetchMatches()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-          Try Again
+        <button
+          (click)="fetchMatches()"
+          class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          {{ translations[currentLang]?.tryAgain }}
         </button>
       </div>
     </ng-container>
@@ -28,17 +30,19 @@
     <ng-container *ngIf="!isLoading && !error && matches">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <ng-container *ngIf="matches.matches.length > 0; else noMatches">
-          <app-matched-job-card *ngFor="let match of matches.matches" [job]="match"></app-matched-job-card>
+          <app-matched-job-card
+            *ngFor="let match of matches.matches"
+            [job]="match"
+          ></app-matched-job-card>
         </ng-container>
 
         <ng-template #noMatches>
           <div class="col-span-full text-center py-12">
-            <h2 class="text-2xl font-semibold">No matches found</h2>
-            <p class="text-gray-500 mt-2">Try updating your profile or preferences.</p>
+            <h2 class="text-2xl font-semibold">{{ translations[currentLang]?.noMatchesTitle }}</h2>
+            <p class="text-gray-500 mt-2">{{ translations[currentLang]?.noMatchesMessage }}</p>
           </div>
         </ng-template>
       </div>
     </ng-container>
   </main>
-
 </div>

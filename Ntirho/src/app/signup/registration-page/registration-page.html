@@ -6,52 +6,6 @@
         {{ translations.createAccountTitle }}
       </h1>
 
-      <!-- Start with the email and password -->
-       <form *ngIf="false" [formGroup]="form" (ngSubmit)="onSignup()">
-        <div class="flex flex-col rounded-lg border border-gray-900 p-4 m-2 gap-2">
-          <div class="flex flex-col">
-            <label class="font-medium">Email</label>
-            <input type="email" formControlName="email" class="h-8 bg-gray-200 rounded-sm p-2"/>
-            <div *ngIf="form.get('email')?.errors?.['required'] && form.get('email')?.touched" class="text-red-500 text-sm">
-              Email is required.
-            </div>
-            <div *ngIf="form.get('email')?.errors?.['pattern'] && form.get('email')?.touched" class="text-red-500 text-sm">
-              Please enter a valid email address.
-            </div>
-
-          </div>
-          <div class="flex flex-col">
-            <label class="font-medium">Password</label>
-            <input type="password" formControlName="password" class="h-8 bg-gray-200 rounded-sm p-2"/>
-            <div *ngIf="form.get('password')?.errors?.['required'] && form.get('password')?.touched" class="text-red-500 text-sm">
-              Password is required.
-            </div>
-            <div *ngIf="form.get('password')?.errors?.['pattern'] && form.get('password')?.touched" class="text-red-500 text-sm">
-              Must be at least 8 characters, include uppercase, lowercase, number, and special character.
-            </div>
-
-          </div>
-          <div class="flex flex-col">
-            <label class="font-medium">Confirm Password</label>
-            <input type="password" formControlName="confirmPassword" class="h-8 bg-gray-200 rounded-sm p-2"/>
-            <div *ngIf="form.hasError('mismatch') && form.get('confirmPassword')?.touched" class="text-red-500 text-sm">
-              Passwords do not match.
-            </div>
-            <div *ngIf="form.get('confirmPassword')?.errors?.['required'] && form.get('confirmPassword')?.touched" class="text-red-500 text-sm">
-              Confirm password is required.
-            </div>
-
-          </div>
-
-          <div class="flex flex-row justify-center items-center mt-5">
-            <button type="submit" class="bg-green-500 hover:bg-green-400 rounded-lg p-3 w-1/3 cursor-pointer">
-              Submit
-            </button>
-          </div>
-        </div>
-       </form>
-
-      
       <ng-container>
         <app-registration-form [email]="form.get('email')?.value"></app-registration-form>
       </ng-container>

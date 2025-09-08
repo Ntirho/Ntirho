@@ -228,12 +228,21 @@ async testInsert() {
    * Selects
    */
   // Certificate
-  async getCertificates() {
-    return await this.supabase.from('certificate').select('*');
+  async getCertificates(id: string): Promise<Certificate[]> {
+    const { data, error } = await this.supabase.from('certificate').select('*');
+
+    if (error){
+      console.error('Error in retrieving certificates.', error);
+      return [];
+    }
+
+    const certificates = data?.filter(x => x.user_id === id) ?? [];
+
+    return certificates;
   }
 
   // Disability
-  async getDisability(user_id: UUID) {
+  async getDisability(user_id: string) {
     const list = await this.supabase.from('disability').select('*');
     // const disability!: Disability;
     return list;
@@ -254,8 +263,20 @@ async testInsert() {
   }
 
   // Experience
-  async getExperiences() {
-    return await this.supabase.from('experience').select('*');
+  async getExperiences(id: string): Promise<Experience[]> {
+    const { data, error } =  await this.supabase.from('experience').select('*');
+
+    if (error) {
+      console.error('Error while retrieving experiences.', error);
+      return [];
+    }
+
+    console.log('Experiences.', data);
+
+    const experiences = data?.filter(x => x.user_id === id) ?? [];
+    console.log('Experiences filtered.', experiences);
+
+    return experiences;
   }
 
   // Job
@@ -298,10 +319,14 @@ async testInsert() {
    * Update
    */
   // Certificate
-  async updateCertificate(certificate: Certificate) {
+  async updateCertificate(certificate: Certificate, id: number) {
     const { data, error } = await this.supabase.from('certificate')
-      .update({ credential_url: certificate.credential_url, expiry_date: certificate.expiry_date})
-      .eq('certificate_id', certificate.certificate_id)
+      .update({ 
+        credential_url: certificate.credential_url, 
+        issue_date: certificate.issue_date,
+        expiry_date: certificate.expiry_date
+      })
+      .eq('certificate_id', id)
       .select();
 
     return { data, error };
@@ -349,28 +374,27 @@ async testInsert() {
   }
 
   // Education
-  async updateEducation(education: { education_id: number; average?: number; completion_date?: string }) {
+  async updateEducation(education: Education, id: number) {
     const { data, error } = await this.supabase.from('education')
       .update({
+        qualification: education.qualification,
         average: education.average,
         completion_date: education.completion_date
       })
-      .eq('education_id', education.education_id)
+      .eq('qualification_id', id)
       .select();
 
     return { data, error };
   }
 
   // Experience
-  async updateExperience(exp: { experience_id: number; title?: string; description?: string; start_date?: string; end_date?: string }) {
+  async updateExperience(exp: Experience, id: number) {
     const { data, error } = await this.supabase.from('experience')
       .update({
-        title: exp.title,
         description: exp.description,
-        start_date: exp.start_date,
         end_date: exp.end_date
       })
-      .eq('experience_id', exp.experience_id)
+      .eq('experience_id', id)
       .select();
 
     return { data, error };
@@ -401,7 +425,7 @@ async testInsert() {
   }
 
   // Disabilities
-  async deleteDisability(user_id: UUID) {
+  async deleteDisability(user_id: string) {
     const { data, error } = await this.supabase.from('disability')
       .delete()
       .eq('user_id', user_id)
@@ -414,8 +438,11 @@ async testInsert() {
   async deleteEducation(education_id: number) {
     const { data, error } = await this.supabase.from('education')
       .delete()
-      .eq('education_id', education_id)
+      .eq('qualification_id', education_id)
       .select();
+
+    if(error)
+      console.error('Error while update education', error);
 
     return { data, error };
   }
@@ -427,6 +454,9 @@ async testInsert() {
       .eq('experience_id', experience_id)
       .select();
 
+    if(error)
+      console.error('Error while update experience', error);
+
     return { data, error };
   }
 
@@ -436,6 +466,9 @@ async testInsert() {
       .delete()
       .eq('certificate_id', certificate_id)
       .select();
+
+    if(error)
+      console.error('Error while update certificate', error);
 
     return { data, error };
   }

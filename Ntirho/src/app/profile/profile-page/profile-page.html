@@ -2,63 +2,75 @@
   <main class="flex-1 container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto space-y-8">
       <div class="flex flex-col items-center text-gray-500 gap-6">
-        <!-- <img [src]="user.avatarUrl" [alt]="user.name" class="h-24 w-24 border-4 border-cyan-400 rounded-full" /> -->
-
-          <div class="flex-1 text-center sm:text-left">
+        <div *ngIf="submittedData" class="flex-1 text-center sm:text-left">
           <h1 class="text-4xl font-bold font-headline text-black font-serif">{{ submittedData.full_names }}</h1>
-          <!--<p class="text-muted-foreground flex items-center justify-center sm:justify-start gap-2 mt-1">
-            <i class="bx bx-at h-4 w-4"></i> {{ user.email }}
-          </p>
-          <p class="text-muted-foreground flex items-center justify-center sm:justify-start gap-2">
-            <i class="bx bx-map h-4 w-4"></i> {{ user.location }}
-          </p> -->
         </div>
 
-        <!-- <button class="btn bg-blue-400 hover:bg-cyan-400 rounded-lg px-2.5 h-8 text-cyan-50 cursor-pointer" (click)="openEditDialog()">
-          <i class="bx bx-edit mr-2 h-4 w-4"></i>
-          {{ translations.editProfile }}
-        </button> -->
       </div>
-
-      <!-- <div (close)="closeEditDialog()">
-        <app-profile-form [user]="user" (save)="handleProfileUpdate($event)" />
-      </div> -->
 
       <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
         <div>
           <div class="flex flex-row justify-between">
-            <h2 class="font-bold text-2xl">About Me</h2>
-            <button (click)="onEditAbout()" class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center">
+            <h2 class="font-bold text-2xl">
+              {{ translations[currentLang]?.aboutMeTitle }}
+            </h2>
+            <button
+              (click)="onEditAbout()"
+              class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+              [attr.aria-label]="translations[currentLang]?.editAboutLabel"
+            >
               <i class="bx bx-pencil text-2xl text-white font-extrabold p-2"></i>
             </button>
           </div>
+
           <ng-container *ngIf="editingAbout">
             <form [formGroup]="aboutForm" (ngSubmit)="onEnterAbout()">
               <div class="flex flex-col p-2 m-2 gap-2.5">
-                
                 <div class="flex flex-col items-center gap-2.5">
-                  <textarea formControlName="about" rows="5" class="border border-gray-400 rounded-lg w-full h-full p-2">{{ attributes.about }}</textarea>
-                  <div *ngIf="aboutForm.get('about')?.invalid && aboutForm.get('about')?.touched" class="text-red-500 text-sm">
-                    Required
+                  <textarea
+                    formControlName="about"
+                    rows="5"
+                    class="border border-gray-400 rounded-lg w-full h-full p-2"
+                    [placeholder]="translations[currentLang]?.aboutPlaceholder"
+                  >{{ attributes.about }}</textarea>
+
+                  <div
+                    *ngIf="aboutForm.get('about')?.invalid && aboutForm.get('about')?.touched"
+                    class="text-red-500 text-sm"
+                  >
+                    {{ translations[currentLang]?.errors?.aboutRequired }}
                   </div>
-                  <button *ngIf="editingAbout" type="submit" class="bg-blue-500 hover:bg-blue-400 rounded-lg h-8 cursor-pointer w-2/3">
-                    Save
+
+                  <button
+                    *ngIf="editingAbout"
+                    type="submit"
+                    class="bg-blue-500 hover:bg-blue-400 rounded-lg h-8 cursor-pointer w-2/3"
+                  >
+                    {{ translations[currentLang]?.save }}
                   </button>
                 </div>
               </div>
             </form>
           </ng-container>
+
           <div *ngIf="!editingAbout && attributes">
-            <textarea rows="5" class="border border-gray-400 rounded-lg w-full h-full p-2 m-2" disabled="true">{{ attributes.about }}</textarea>
+            <textarea
+              rows="5"
+              class="border border-gray-400 rounded-lg w-full h-full p-2 m-2"
+              disabled="true"
+            >{{ attributes.about }}</textarea>
           </div>
         </div>
       </div>
 
       <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
-        
         <div class="flex flex-row justify-between">
-          <h2 class="font-bold text-2xl">Personal Details</h2>
-          <button (click)="onEditDetails()" class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center">
+          <h2 class="font-bold text-2xl">{{ translations[currentLang]?.personalDetailsTitle }}</h2>
+          <button
+            (click)="onEditDetails()"
+            class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+            [attr.aria-label]="translations[currentLang]?.editDetailsLabel"
+          >
             <i class="bx bx-pencil text-2xl text-white font-extrabold p-2"></i>
           </button>
         </div>
@@ -69,65 +81,228 @@
 
         <ng-template #viewDetails>
           <div *ngIf="submittedData" class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
-            <h3 class="text-lg font-semibold text-gray-700">👤 Personal Details</h3>
-            <p><strong>Full Names:</strong> {{ submittedData.full_names }}</p>
-            <p><strong>Email:</strong> {{ submittedData.email }}</p>
-            <p><strong>Contact:</strong> {{ submittedData.code }} {{ submittedData.cell }}</p>
-            <p><strong>Date of Birth:</strong> {{ submittedData.date_of_birth | date }}</p>
-            <p><strong>Sex:</strong> {{ submittedData.sex }}</p>
-            <p><strong>Ethnicity:</strong> {{ submittedData.ethnicity }}</p>
-            <p><strong>Home Language:</strong> {{ submittedData.home_language }}</p>
-            <p><strong>Current Location:</strong> {{ submittedData.location }}</p>
-            <p><strong>Driver's License:</strong> {{ submittedData.driver_license ? 'Yes' : 'No' }}</p>
-            <p><strong>Living with Disabilities:</strong> {{ submittedData.has_disability ? 'Yes' : 'No' }}</p>
-            <p *ngIf="submittedData.has_disability"><strong>Disability Details:</strong> {{ disability }}</p>
-          </div>
+            <h3 class="text-lg font-semibold text-gray-700">👤 {{ translations[currentLang]?.personalDetailsTitle }}</h3>
+            <p><strong>{{ translations[currentLang]?.fullNames }}:</strong> {{ submittedData.full_names }}</p>
+            <p><strong>{{ translations[currentLang]?.email }}:</strong> {{ submittedData.email }}</p>
+            <p><strong>{{ translations[currentLang]?.contact }}:</strong> {{ submittedData.code }} {{ submittedData.cell }}</p>
+            <p><strong>{{ translations[currentLang]?.dateOfBirth }}:</strong> {{ submittedData.date_of_birth | date }}</p>
+            <p><strong>{{ translations[currentLang]?.sex }}:</strong> {{ submittedData.sex }}</p>
+            <p><strong>{{ translations[currentLang]?.ethnicity }}:</strong> {{ submittedData.ethnicity }}</p>
+            <p><strong>{{ translations[currentLang]?.homeLanguage }}:</strong> {{ submittedData.home_language }}</p>
+            <p><strong>{{ translations[currentLang]?.location }}:</strong> {{ submittedData.location }}</p>
+            <p><strong>{{ translations[currentLang]?.driversLicense }}:</strong> {{ submittedData.driver_license ? translations[currentLang]?.yes : translations[currentLang]?.no }}</p>
+            <p><strong>{{ translations[currentLang]?.disability }}:</strong> {{ submittedData.has_disability ? translations[currentLang]?.yes : translations[currentLang]?.no }}</p>
+            <p *ngIf="submittedData.has_disability"><strong>{{ translations[currentLang]?.disabilityDetails }}:</strong> {{ disability }}</p>
 
+            <div *ngIf="submittedData && isEditorOpen">
+              <app-editor [openModal]="isEditorOpen" [personalDetails]="selectedDetails" (close)="onClodeEditor()"></app-editor>
+            </div>
+          </div>
         </ng-template>
       </div>
 
       <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
         <div class="flex flex-row justify-between">
-          <h2 class="text-2xl font-bold">Education</h2>
-          <button (click)="onAddEducation()" class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center">
+          <h2 class="text-2xl font-bold">{{ translations[currentLang]?.certificationTitle }}</h2>
+          <button
+            (click)="onAddCertificate()"
+            class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+            [attr.aria-label]="translations[currentLang]?.addCertificateLabel"
+          >
             <i class="bx bx-plus text-2xl text-white font-extrabold p-2"></i>
           </button>
         </div>
-        
+
+        <ng-container *ngIf="addingCertificate">
+          <app-certification-form [userId]="user_id"></app-certification-form>
+        </ng-container>
+
+        <div
+          *ngFor="let certificate of certificates; let i = index"
+          class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2"
+        >
+          <div class="flex flex-row items-center justify-between gap-2.5">
+            <h3 class="text-lg font-semibold text-gray-700">
+              {{ translations[currentLang]?.certificateLabel }} {{ i + 1 }}
+            </h3>
+            <div class="flex gap-2.5 m-3.5">
+              <button
+                (click)="onEditCertificate(certificate)"
+                class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+                [attr.aria-label]="translations[currentLang]?.editCertificateLabel"
+              >
+                <i class="bx bx-pencil text-2xl text-white font-extrabold p-2"></i>
+              </button>
+              <button
+                (click)="onDeleteCertificate(certificate)"
+                class="bg-red-500 hover:bg-red-300 cursor-pointer rounded-full items-center"
+                [attr.aria-label]="translations[currentLang]?.deleteCertificateLabel"
+              >
+                <i class="bx bx-trash text-2xl text-white font-extrabold p-2"></i>
+              </button>
+            </div>
+          </div>
+          <p><strong>{{ translations[currentLang]?.title }}:</strong> {{ certificate.title }}</p>
+          <p><strong>{{ translations[currentLang]?.issuer }}:</strong> {{ certificate.issuer }}</p>
+          <p><strong>{{ translations[currentLang]?.issueDate }}:</strong> {{ certificate.issue_date | date }}</p>
+          <p><strong>{{ translations[currentLang]?.expiryDate }}:</strong> {{ certificate.expiry_date | date }}</p>
+          <p><strong>{{ translations[currentLang]?.credentialUrl }}:</strong>
+            <a [href]="certificate.credential_url" class="text-blue-400 hover:text-blue-500 cursor-aliaspointer">
+              Visit site
+            </a>
+          </p>
+        </div>
+
+        <div *ngIf="isEditorOpen && selectedCertificate">
+          <app-editor [openModal]="isEditorOpen" [certificate]="selectedCertificate" (close)="onClodeEditor()"></app-editor>
+        </div>
+
+        <!-- Delete -->
+        <div *ngIf="isDeleteConfirmed && selectedCertificate">
+          <app-confirm-delete [openModal]="isDeleteConfirmed" (close)="onCloseDelete()" [certificate]="selectedCertificate"></app-confirm-delete>
+        </div>
+      </div>          
+
+      <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
+        <div class="flex flex-row justify-between">
+          <h2 class="text-2xl font-bold">{{ translations[currentLang]?.experiencesTitle }}</h2>
+          <button
+            (click)="onAddExperience()"
+            class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+            [attr.aria-label]="translations[currentLang]?.addExperienceLabel"
+          >
+            <i class="bx bx-plus text-2xl text-white font-extrabold p-2"></i>
+          </button>
+        </div>
+
+        <ng-container *ngIf="addingExperience">
+          <app-experience-form [userId]="user_id"></app-experience-form>
+        </ng-container>
+
+        <div *ngFor="let experience of experiences; let i = index" class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
+          <div class="flex flex-row items-center justify-between gap-2.5">
+            <h3 class="text-lg font-semibold text-gray-700">
+              {{ translations[currentLang]?.experienceLabel }} {{ i + 1 }}
+            </h3>
+            <div class="flex gap-2.5 m-3.5">
+              <button
+                (click)="onEditExperience(experience)"
+                class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+                [attr.aria-label]="translations[currentLang]?.editExperienceLabel"
+              >
+                <i class="bx bx-pencil text-2xl text-white font-extrabold p-2"></i>
+              </button>
+              <button
+                (click)="onDeleteExprience(experience)"
+                class="bg-red-500 hover:bg-red-300 cursor-pointer rounded-full items-center"
+                [attr.aria-label]="translations[currentLang]?.deleteExperienceLabel"
+              >
+                <i class="bx bx-trash text-2xl text-white font-extrabold p-2"></i>
+              </button>
+            </div>
+          </div>
+          <p><strong>{{ translations[currentLang]?.organization }}:</strong> {{ experience.organization }}</p>
+          <p><strong>{{ translations[currentLang]?.title }}:</strong> {{ experience.title }}</p>
+          <p><strong>{{ translations[currentLang]?.description }}:</strong> {{ experience.description }}</p>
+          <p><strong>{{ translations[currentLang]?.startDate }}:</strong> {{ experience.start_date | date }}</p>
+          <p><strong>{{ translations[currentLang]?.endDate }}:</strong> {{ experience.end_date | date }}</p>
+        </div>
+
+        <div *ngIf="isEditorOpen && selectedExperience">
+          <app-editor [openModal]="isEditorOpen" [experience]="selectedExperience" (close)="onClodeEditor()"></app-editor>
+        </div>
+
+        <div *ngIf="isDeleteConfirmed && selectedExperience">
+          <app-confirm-delete [openModal]="isDeleteConfirmed" (close)="onCloseDelete()" [experience]="selectedExperience"></app-confirm-delete>
+        </div>
+      </div>
+
+      <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
+        <div class="flex flex-row justify-between">
+          <h2 class="text-2xl font-bold">{{ translations[currentLang]?.educationTitle }}</h2>
+          <button
+            (click)="onAddEducation()"
+            class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+            [attr.aria-label]="translations[currentLang]?.addEducationLabel"
+          >
+            <i class="bx bx-plus text-2xl text-white font-extrabold p-2"></i>
+          </button>
+        </div>
+
         <ng-container *ngIf="addingEducation">
           <app-education-form [userId]="user_id"></app-education-form>
         </ng-container>
 
-        <div *ngFor="let dummyEducation of qualifications; let i = index" class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
-            <h3 class="text-lg font-semibold text-gray-700">📘 Education {{ i + 1 }}</h3>
-            <p><strong>Institution:</strong> {{ dummyEducation.institution }}</p>
-            <p><strong>Qualification:</strong> {{ dummyEducation.qualification }}</p>
-            <p><strong>Start Date:</strong> {{ dummyEducation.start_date | date }}</p>
-            <p><strong>Completion Date:</strong> {{ dummyEducation.completion_date | date }}</p>
-            <p><strong>Academic Average:</strong> {{ dummyEducation.average }}%</p>
+        <div *ngFor="let education of qualifications; let i = index" class="bg-white rounded-lg border border-gray-300 p-4 mt-6 space-y-2">
+          <div class="flex flex-row items-center justify-between gap-2.5">
+            <h3 class="text-lg font-semibold text-gray-700">
+              {{ translations[currentLang]?.educationLabel }} {{ i + 1 }}
+            </h3>
+            <div class="flex gap-2.5 m-3.5">
+              <button
+                (click)="onEditEducation(education)"
+                class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+                [attr.aria-label]="translations[currentLang]?.editEducationLabel"
+              >
+                <i class="bx bx-pencil text-2xl text-white font-extrabold p-2"></i>
+              </button>
+              <button
+                (click)="onDeleteEducation(education)"
+                class="bg-red-500 hover:bg-red-300 cursor-pointer rounded-full items-center"
+                [attr.aria-label]="translations[currentLang]?.deleteEducationLabel"
+              >
+                <i class="bx bx-trash text-2xl text-white font-extrabold p-2"></i>
+              </button>
+            </div>
           </div>
-    </div>
+          <p><strong>{{ translations[currentLang]?.institution }}:</strong> {{ education.institution }}</p>
+          <p><strong>{{ translations[currentLang]?.qualification }}:</strong> {{ education.qualification }}</p>
+          <p><strong>{{ translations[currentLang]?.startDate }}:</strong> {{ education.start_date | date }}</p>
+          <p><strong>{{ translations[currentLang]?.completionDate }}:</strong> {{ education.completion_date | date }}</p>
+          <p><strong>{{ translations[currentLang]?.academicAverage }}:</strong> {{ education.average }}%</p>
+        </div>
+
+        <div *ngIf="isEditorOpen && selectedEducation">
+          <app-editor [openModal]="isEditorOpen" [education]="selectedEducation" (close)="onClodeEditor()"></app-editor>
+        </div>
+
+        <div *ngIf="isDeleteConfirmed && selectedEducation">
+          <app-confirm-delete [openModal]="isDeleteConfirmed" (close)="onCloseDelete()" [education]="selectedEducation"></app-confirm-delete>
+        </div>
+      </div>
 
       <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
         <div class="flex flex-row justify-between">
-          <h2 class="text-2xl font-bold">My Skills</h2>
-          <button class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center" (click)="onAddSkills()">
+          <h2 class="text-2xl font-bold">{{ translations[currentLang]?.skillsTitle }}</h2>
+          <button
+            class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+            (click)="onAddSkills()"
+            [attr.aria-label]="translations[currentLang]?.addSkillLabel"
+          >
             <i class="bx bx-plus text-2xl text-white font-extrabold p-2"></i>
           </button>
         </div>
 
-        <!--When the edit is initiated-->
         <ng-container *ngIf="addingSkills">
           <form [formGroup]="skillForm" (ngSubmit)="onEnterSkill()">
             <div class="flex flex-row flex-wrap gap-2.5">
-            <input type="text" formControlName="skill" class="h-8 bg-gray-200 p-2 w-3/5 rounded-lg" placeholder="Enter skill"/>
-            <div *ngIf="skillForm.get('skill')?.invalid && skillForm.get('skill')?.touched" class="text-red-500 text-sm">
-              Required.
+              <input
+                type="text"
+                formControlName="skill"
+                class="h-8 bg-gray-200 p-2 w-3/5 rounded-lg"
+                [placeholder]="translations[currentLang]?.enterSkillPlaceholder"
+              />
+              <div *ngIf="skillForm.get('skill')?.invalid && skillForm.get('skill')?.touched" class="text-red-500 text-sm">
+                {{ translations[currentLang]?.requiredField }}
+              </div>
+              <button
+                type="submit"
+                [disabled]="!skillForm.valid"
+                class="bg-blue-500 hover:bg-blue-400 cursor-pointer items-center rounded-lg w-1/5 text-gray-100"
+              >
+                {{ translations[currentLang]?.enterButton }}
+              </button>
             </div>
-            <button type="submit" [disabled]="!skillForm.valid" class="bg-blue-500 hover:bg-blue-400 cursor-pointer items-center rounded-lg w-1/5 text-gray-100">
-              Enter
-            </button>
-          </div>
           </form>
         </ng-container>
 
@@ -138,31 +313,42 @@
             </span>
           </div>
         </div>
-    </div>
+      </div>
 
       <div class="bg-neutral-100 flex flex-col rounded-lg border border-gray-500 p-5 m-3.5 gap-3.5">
         <div class="flex flex-row flex-wrap justify-between">
           <div class="flex items-center gap-2 text-2xl font-bold">
-            {{ translations.myInterests }}
+            {{ translations[currentLang]?.myInterests }}
           </div>
-          <button class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center" (click)="onAddInterests()">
+          <button
+            class="bg-amber-500 hover:bg-amber-300 cursor-pointer rounded-full items-center"
+            (click)="onAddInterests()"
+            [attr.aria-label]="translations[currentLang]?.addInterestLabel"
+          >
             <i class="bx bx-plus text-2xl font-extrabold text-white p-2"></i>
           </button>
-
         </div>
 
-        <!--When the edit is initiated-->
         <ng-container *ngIf="addingInterests">
           <form [formGroup]="interestForm" (ngSubmit)="onEnterInterest()">
             <div class="flex flex-row flex-wrap gap-2.5">
-            <input type="text" formControlName="interest" class="h-8 bg-gray-200 p-2 w-3/5 rounded-lg" placeholder="Interest | hobby | activities"/>
-            <div *ngIf="interestForm.get('interest')?.invalid && interestForm.get('interest')?.touched" class="text-red-500 text-sm">
-              Required.
+              <input
+                type="text"
+                formControlName="interest"
+                class="h-8 bg-gray-200 p-2 w-3/5 rounded-lg"
+                [placeholder]="translations[currentLang]?.interestPlaceholder"
+              />
+              <div *ngIf="interestForm.get('interest')?.invalid && interestForm.get('interest')?.touched" class="text-red-500 text-sm">
+                {{ translations[currentLang]?.requiredField }}
+              </div>
+              <button
+                type="submit"
+                [disabled]="!interestForm.valid"
+                class="bg-blue-500 hover:bg-blue-400 cursor-pointer items-center rounded-lg w-1/5 text-gray-100"
+              >
+                {{ translations[currentLang]?.enterButton }}
+              </button>
             </div>
-            <button type="submit" [disabled]="!interestForm.valid" class="bg-blue-500 hover:bg-blue-400 cursor-pointer items-center rounded-lg w-1/5 text-gray-100">
-              Enter
-            </button>
-          </div>
           </form>
         </ng-container>
 
@@ -173,7 +359,24 @@
             </span>
           </div>
         </div>
-    </div>
+      </div>
     </div>
   </main>
 </div>
+
+<!-- Deletes -->
+
+<!-- Experience
+<div *ngIf="isDeleteConfirmed && selectedExperience">
+  <app-confirm-delete [openModal]="isDeleteConfirmed" (close)="onCloseDelete()" [experience]="selectedExperience"></app-confirm-delete>
+</div>
+
+<-- Education --
+<div *ngIf="isDeleteConfirmed && selectedEducation">
+  <app-confirm-delete [openModal]="isDeleteConfirmed" (close)="onCloseDelete()" [education]="selectedEducation"></app-confirm-delete>
+</div>
+
+<-- Certificate --
+<div *ngIf="isDeleteConfirmed && selectedCertificate">
+  <app-confirm-delete [openModal]="isDeleteConfirmed" (close)="onCloseDelete()" [certificate]="selectedCertificate"></app-confirm-delete>
+</div> -->

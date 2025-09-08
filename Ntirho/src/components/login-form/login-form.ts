@@ -12,7 +12,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { z } from 'zod';
-import { LanguageService } from '../../services/language';
+import { Language, LanguageService } from '../../services/language';
 import { AuthService } from '../../services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl } from '@angular/forms';
@@ -47,6 +47,7 @@ export class LoginForm implements OnInit {
   isLoading = false;
   emailConfirmation = false;
   translations: any = {};
+  currentLang: Language = 'en';
 
   constructor(
     private languageService: LanguageService,
@@ -58,7 +59,10 @@ export class LoginForm implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.translations = this.languageService.translations;
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations;
+    
     this.form = this.fb.group({
       email: ["", Validators.required],
       password: ['', Validators.required]
@@ -154,6 +158,54 @@ export class LoginForm implements OnInit {
     }
   }
 }
+
+const translations = {
+  en: {
+    welcomeBack: "Welcome Back",
+    magicLinkPrompt: "Enter your email to receive a magic login link.",
+    emailPlaceholder: "Email address",
+    emailError: "Please enter your email.",
+    passwordPlaceholder: "Password",
+    passwordError: "Please enter your password.",
+    login: "Login",
+    forgotPassword: "Forgot password",
+    resetPasswordTitle: "Reset Your Password",
+    emailLabel: "Email address",
+    requiredField: "Required",
+    resetInstructions: "We’ll send a secure link to reset your password. Make sure it’s the email you used to sign up.",
+    sendResetLink: "Send Reset Link"
+  },
+  nso: {
+    welcomeBack: "Rea go amogela gape",
+    magicLinkPrompt: "Tsenya imeile ya gago go amogela sehokelo sa go tsena.",
+    emailPlaceholder: "Aterese ya imeile",
+    emailError: "Tsenya imeile ya gago.",
+    passwordPlaceholder: "Phasewete",
+    passwordError: "Tsenya phasewete ya gago.",
+    login: "Kena",
+    forgotPassword: "Le lebetse phasewete",
+    resetPasswordTitle: "Lokisa Phasewete",
+    emailLabel: "Aterese ya imeile",
+    requiredField: "Tlhokega",
+    resetInstructions: "Re tla romela sehokelo se se sireletsegileng sa go lokisa phasewete ya gago.",
+    sendResetLink: "Romela Sehokelo sa Lokisa"
+  },
+  ts: {
+    welcomeBack: "Amukelekile nakambe",
+    magicLinkPrompt: "Nghenisa email ya wena ku kuma link ya ku nghena.",
+    emailPlaceholder: "Address ya email",
+    emailError: "Nghenisa email ya wena.",
+    passwordPlaceholder: "Phasiwedi",
+    passwordError: "Nghenisa phasiwedi ya wena.",
+    login: "Nghena",
+    forgotPassword: "U rivalele phasiwedi",
+    resetPasswordTitle: "Lungisa Phasiwedi",
+    emailLabel: "Address ya email",
+    requiredField: "Swi laveka",
+    resetInstructions: "Hi ta ku rhumela link leyi sirhelelekeke ya ku lungisa phasiwedi.",
+    sendResetLink: "Tumela Link ya Lungisa"
+  }
+};
 
 /**
  * if (error){

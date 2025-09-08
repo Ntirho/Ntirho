@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LanguageService } from '../../services/language';
+import { Language, LanguageService } from '../../services/language';
 import { Job } from '../../interfaces';
 import { RouterLink } from '@angular/router';
 import { Modal } from "../modal/modal";
@@ -17,6 +17,7 @@ import { Modal } from "../modal/modal";
 export class JobCard {
   @Input() job!: Job;
   translations: any = {};
+  currentLang: Language = 'en';
 
   constructor(
     //private toast: ToastService,
@@ -24,7 +25,9 @@ export class JobCard {
   ) {}
 
   ngOnInit() {
-    this.translations = this.languageService.translations
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations[this.currentLang];
   }
 
   // Viewing the job details
@@ -45,3 +48,21 @@ export class JobCard {
     // );
   }
 }
+
+const translations = {
+  en: {
+    viewDetails: "View Details",
+    companyLabel: "Company",
+    locationLabel: "Location"
+  },
+  nso: {
+    viewDetails: "Bona dintlha",
+    companyLabel: "Kgwebo",
+    locationLabel: "Lefelo"
+  },
+  ts: {
+    viewDetails: "Vona Vuxokoxoko",
+    companyLabel: "Kampani",
+    locationLabel: "Ndhawu"
+  }
+};

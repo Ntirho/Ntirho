@@ -1,0 +1,17 @@
+fastapi 
+uvicorn 
+filelock 
+numpy
+packaging
+pyyaml
+regex
+requests
+safetensors
+tokenizers
+tqdm
+transformers[torch]
+torchaudio 
+pydub 
+python-multipart
+huggingface_hub
+dotenv

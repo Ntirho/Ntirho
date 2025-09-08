@@ -8,13 +8,24 @@
 
   <div class="p-4 space-y-6">
     <div class="flex justify-center">
-      <button type="button"
-        (click)="handleMicClick()"
+      <button *ngIf="!isRecording && !isTranscribing" type="button"
+        (click)="startRecording()"
         [disabled]="isRecording"
         class="rounded-full h-20 w-20 bg-cyan-100 hover:bg-cyan-200 border-cyan-400 cursor-pointer border-2 flex items-center justify-center"
       >
-        <i *ngIf="!isRecording" class="bx bx-microphone text-3xl text-cyan-400"></i>
-        <i *ngIf="isRecording" class="bx bx-stop animate-spin text-3xl"></i>
+        <i class="bx bx-microphone text-3xl text-cyan-400"></i>
+      </button>
+      <button *ngIf="isRecording" type="button"
+        (click)="stopRecording()"
+        [disabled]="!isRecording"
+        class="rounded-full h-20 w-20 bg-cyan-100 hover:bg-cyan-200 border-cyan-400 cursor-pointer border-2 flex items-center justify-center"
+      >
+        <i class="bx bx-stop animate-spin text-3xl"></i>
+      </button>
+      <button *ngIf="isTranscribing" type="button"
+        class="rounded-full h-20 w-20 bg-cyan-100 hover:bg-cyan-200 border-cyan-400 cursor-pointer border-2 flex items-center justify-center"
+      >
+        <i class="bx bx-loader animate-spin text-3xl"></i>
       </button>
     </div>
 

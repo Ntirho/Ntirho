@@ -3,10 +3,10 @@
 // @Injectable({
 //   providedIn: 'root'
 // })
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type Language = 'en' | 'se';
+export type Language = 'en' | 'nso' | 'ts';
 
 const translations = {
   en: {
@@ -109,8 +109,108 @@ const translations = {
         applicationSentDesc: "Your application for the following job has been sent:",
         close: "Close",
     },
-    se: {
+    nso: {
       logo: "Ntirho",
+      language: "Sepedi",
+      languageOptionSepedi: "Sepedi",
+      languageOptionEnglish: "Seisimane",
+      signUp: "Ingwadiša",
+      logIn: "Kena",
+      logOut: "Tšwa",
+      heroTitle: "Hwetša Mešomo Kgauswi le Wena",
+      thaboStoryTitle: "Kanegelo ya Thabo",
+      thaboStory: "Akanya ka Thabo, moithuti yo a sa tšwago go aloga go tšwa motsaneng o monnyane, yo a hwetšago gore diphaphatha tša go nyaka mošomo tša setlwaedi di sa mo swanele, gomme a šala a se na menyetla.",
+      footerContact: "Ikgokaganye le rena",
+      footerPrivacy: "Leano la Bohlokwa bja Tshedimosetso",
+      footerTraining: "Methopo ya Thuto",
+      footerRights: "Ntirho. Ditokelo ka moka di bolokilwe.",
+      postJobTitle: "Romela Mošomo o Moswa",
+      jobTitleLabel: "Leina la Mošomo",
+      jobTitlePlaceholder: "mohl., Mošomi wa Kakaretšo",
+      companyLabel: "Khamphani",
+      companyPlaceholder: "mohl., BuildIt Polokwane",
+      locationLabel: "Lefelo goba Mošomo",
+      locationPlaceholder: "mohlala: Polokwane goba Mošomi wa di-Computer",
+      descriptionLabel: "Tlhalošo ya Mošomo",
+      descriptionPlaceholder: "Hlalosa maikarabelo le dinyakwa tša mošomo.",
+      skillsLabel: "Mabokgoni a Hlokagalago",
+      skillsPlaceholder: "Kgetha mabokgoni a hlokagalago",
+      skillsDescription: "Kgetha mabokgoni ka moka a hlokagalago bakeng sa mošomo wo.",
+      skillsDescriptionProfile: "Kgetha mabokgoni ka moka ao a go swanelago.",
+      postJobButton: "Romela Mošomo",
+      postJobFooterLink: "Romela Mošomo",
+      browseJobsTitle: "Bona Menyetla ya Mešomo",
+      browseJobsSubtitle: "Hwetša mošomo wo o sepelelanago le bokgoni bja gago lefelong la geno.",
+      filterBySkillPlaceholder: "Hlotla ka bokgoni",
+      allSkills: "Mabokgoni Ka moka",
+      clearFilters: "Hlakola Dihlotsi",
+      noJobsFoundTitle: "Ga go Mešomo ye e Fumanwego",
+      noJobsFoundSubtitle: "Lokiša dihlotsi tša gago go bona menyetla ye mentši.",
+      viewDetails: "Lebelela Dintlha",
+      yourJobMatchesTitle: "Mešomo ye e Go Swanelago",
+      welcomeBack: "O Amogetšwe Gape",
+      yourJobMatchesSubtitle: "Mešomo ye e go swanelago ke ye.",
+      findingJobsLoading: "Re nyaka mešomo ye kaone go wena...",
+      errorOccurredTitle: "Go Diregile Phošo",
+      tryAgain: "Leka Gape",
+      noMatchesFoundTitle: "Ga go Tšhwanetšo ye e Fumanwego",
+      noMatchesFoundSubtitle: "Ga re kgone go hwetša mešomo ye e swanelago bokgoni bja gago gabjale. Leka go mpshafatša profaele ya gago.",
+      matchScore: "Palo ya Tšhwanetšo",
+      matchedSkills: "Mabokgoni a Tšhwanetšo",
+      editProfile: "Lokiša Profaele",
+      editProfileTitle: "Lokiša Profaele ya Gago",
+      editProfileDescription: "Dira diphetogo profaeleng ya gago fa. Tobetsa 'Boloka' ge o feditše.",
+      mySkills: "Mabokgoni a ka",
+      myInterests: "Dithahasello tša ka",
+      createAccountTitle: "Hlama Akhaonto ya Gago",
+      myAccount: "Akhaonto ya ka",
+      profile: "Profaele",
+      myMatches: "Tšhwanetšo ya ka",
+      findAJob: "Hwetša Mošomo",
+      jobPostedSuccessTitle: "Mošomo o Rometswe ka Katlego",
+      jobPostedSuccessDesc: "Mošomo o moswa o tsentšwe mananeong.",
+      jobPostedErrorTitle: "Go Romela go Paletswe",
+      jobPostedErrorDesc: "Go bile le phošo ge o be o romela mošomo. Leka gape.",
+      searchSkillsPlaceholder: "Nyakišiša mabokgoni...",
+      noSkillsFound: "Ga go na mabokgoni a fumanwego.",
+      magicLinkSentTitle: "Khokagano ya Maselamose e Rometswe!",
+      magicLinkSentDesc: "O tsena go akhaonto ya gago.",
+      loginSuccessTitle: "O Kene ka Katlego",
+      loginFailedTitle: "Go Kena go Paletswe",
+      loginFailedDesc: "Re paletšwe go romela khokagano ya maselamose. Leka gape.",
+      magicLinkPrompt: "Tsenya imeile ya gago go amogela khokagano ya maselamose.",
+      emailPlaceholder: "Tsenya imeile ya gago",
+      sendMagicLink: "Romela Khokagano",
+      profileUpdateSuccessTitle: "Profaele e Mpshafaditšwe",
+      profileUpdateSuccessDesc: "Diphetogo tša gago di bolokilwe ka katlego.",
+      profileUpdateErrorTitle: "Go Mpshafatša go Paletswe",
+      profileUpdateErrorDesc: "Go bile le phošo ge o be o mpshafatša profaele ya gago. Leka gape.",
+      nameLabel: "Leina",
+      namePlaceholder: "Tsenya leina la gago",
+      saveChanges: "Boloka Diphetogo",
+      registrationSuccessTitle: "O Ingwadišitše ka Katlego",
+      registrationSuccessDesc: "Akhaonto ya gago e hlodilwe.",
+      registrationFailedTitle: "Go Ingwadiša go Paletswe",
+      registrationFailedDesc: "Go bile le phošo nakong ya go ingwadiša. Leka gape.",
+      emailLabel: "Imeile",
+      submit: "Romela",
+      voiceSearchListening: "E theeletša...",
+      voiceSearchSpeakNow: "Bolela gona bjale go nyaka ka lentšu.",
+      voiceSearchComplete: "Nyakišišo e Feditše!",
+      voiceSearchProcessed: "Nyakišišo ya lentšu e šetšwe.",
+      voiceSearchFailed: "Go Nyaka ka Lentšu go Paletswe",
+      voiceSearchFailedDesc: "Re paletšwe go šoma lentšu la gago. Leka gape.",
+      voiceSearchTitle: "Nyaka ka Lentšu",
+      voiceSearchDescription: "Ga o kgone go thaepa? Ga go bothata. Tobetsa konopo o re botše mošomo wo o nyakago ka Sepedi.",
+      youSaidSepedi: "O rile (Sepedi):",
+      weUnderstoodEnglish: "Re kwešišitše (Seisimane):",
+      applyNow: "Romela Kopo Gona Bjale",
+      applicationSentTitle: "Kopo e Rometswe",
+      applicationSentDesc: "Kopo ya gago ya mošomo o latelago e rometswe:",
+      close: "Tswalela",
+  },
+  ts: {
+    logo: "Ntirho",
       language: "Sepedi",
       languageOptionSepedi: "Sepedi",
       languageOptionEnglish: "Seisimane",
@@ -220,7 +320,7 @@ export type Translations = typeof translations.en;
 export class LanguageService {
   private languageSubject = new BehaviorSubject<Language>('en');
   language$ = this.languageSubject.asObservable();
-
+  
   get language(): Language {
     return this.languageSubject.value;
   }
@@ -231,6 +331,26 @@ export class LanguageService {
 
   setLanguage(lang: Language): void {
     this.languageSubject.next(lang);
+
+    // Save to the local storage
+    localStorage.setItem("language", lang);
   }
+
+  getLang(): string{
+    return localStorage.getItem("language") ?? 'en';
+  }
+
+  getLanguage(): Language{
+    const val = localStorage.getItem("language");
+
+    if (val === 'nso')
+      return 'nso';
+    if (val === 'ts')
+      return 'ts';
+
+    return 'en';
+  }
+
+
 }
 

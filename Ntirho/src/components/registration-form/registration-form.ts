@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
-import { LanguageService } from '../../services/language';
+import { Language, LanguageService } from '../../services/language';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { isValid } from 'zod';
@@ -23,6 +23,7 @@ export class RegistrationForm implements OnInit {
   isLoading = false;
   showSkills = true;
   translations: any = {};
+  currentLang!: string;
   skillsList = skillsList;
 
   showDisabilityDetails = false;
@@ -39,7 +40,9 @@ export class RegistrationForm implements OnInit {
   ) { }
 
   ngOnInit () {
-    this.translations = this.languageService.translations;
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations;
 
     this.personalDetailsForm = this.fb.group({
       fullNames: ['', [
@@ -178,6 +181,149 @@ export class RegistrationForm implements OnInit {
     return this.personalDetailsForm.value.skills.includes(skill);
   }
 }
+
+export const translations = {
+  en: {
+    fullNames: "Full Names",
+    email: "Email",
+    password: "Password",
+    confirmPassword: "Confirm Password",
+    contactDetails: "Contact Details",
+    phonePlaceholder: "78 *** ****",
+    dob: "Date of Birth",
+    sex: "Sex",
+    male: "Male",
+    female: "Female",
+    ethnicity: "Ethnicity",
+    african: "African",
+    white: "White",
+    coloured: "Coloured",
+    indian: "Indian",
+    homeLanguage: "Home Language",
+    sepedi: "Sepedi",
+    xitsonga: "Xitsonga",
+    tshivenda: "Tshivenda",
+    location: "Current Location",
+    hasLicense: "I have a valid driver's license",
+    hasDisability: "Are you living with disabilities?",
+    disabilityPlaceholder: "Please specify",
+    select: "Select",
+    submit: "Submit",
+    posting: "Posting...",
+    errors: {
+      fullNamesRequired: "Required. Please enter your full name.",
+      fullNamesPattern: "Only letters and spaces allowed. Minimum 2 characters.",
+      emailRequired: "Required. Please enter your email address.",
+      emailInvalid: "Invalid format. Please enter a valid email address.",
+      passwordRequired: "Password is required.",
+      passwordPattern: "Must be at least 8 characters, include uppercase, lowercase, number, and special character.",
+      confirmPasswordRequired: "Confirm password is required.",
+      passwordMismatch: "Passwords do not match.",
+      phoneRequired: "Required. Please enter your cell number.",
+      phonePattern: "Invalid format. Please enter a valid 9-digit cell number.",
+      dobRequired: "Required.",
+      sexRequired: "Required.",
+      ethnicityRequired: "Required.",
+      homeLanguageRequired: "Required.",
+      locationRequired: "Required.",
+      disabilityRequired: "Required."
+    }
+  },
+
+  nso: {
+    fullNames: "Maina a feletseng",
+    email: "Imeile",
+    password: "Phasewete",
+    confirmPassword: "Netefatsa Phasewete",
+    contactDetails: "Dintlha tša kgokagano",
+    phonePlaceholder: "78 *** ****",
+    dob: "Letšatši la matswalo",
+    sex: "Bong",
+    male: "Monna",
+    female: "Mosadi",
+    ethnicity: "Setšhaba",
+    african: "Moafrika",
+    white: "Moušwa",
+    coloured: "Motswakwa",
+    indian: "Moindia",
+    homeLanguage: "Polelo ya Gae",
+    sepedi: "Sepedi",
+    xitsonga: "Xitsonga",
+    tshivenda: "Tshivenda",
+    location: "Lefelo la bjale",
+    hasLicense: "Ke na le laesense ya go sepela",
+    hasDisability: "O phela le bokgoni bjo bo fokolago?",
+    disabilityPlaceholder: "Hlalosa mo",
+    select: "Kgetha",
+    submit: "Romela",
+    posting: "Go romela...",
+    errors: {
+      fullNamesRequired: "Hlokega. Kenya maina a feletseng.",
+      fullNamesPattern: "Mangwalo le dikgapetšo feela. Bonyane ditlhaka tše 2.",
+      emailRequired: "Hlokega. Kenya aterese ya imeile.",
+      emailInvalid: "Sebopego se fošagetšego. Kenya aterese ya imeile ye nepagetšego.",
+      passwordRequired: "Phasewete e a hlokega.",
+      passwordPattern: "Bonyane ditlhaka tše 8, go akaretša ditlhaka tše dikgolo, tše nnyane, nomoro le sešupo.",
+      confirmPasswordRequired: "Netefatso ya phasewete e a hlokega.",
+      passwordMismatch: "Diphasewete ga di swane.",
+      phoneRequired: "Hlokega. Kenya nomoro ya mogala.",
+      phonePattern: "Sebopego se fošagetšego. Kenya nomoro ya mogala ya ditlhaka tše 9.",
+      dobRequired: "Hlokega.",
+      sexRequired: "Hlokega.",
+      ethnicityRequired: "Hlokega.",
+      homeLanguageRequired: "Hlokega.",
+      locationRequired: "Hlokega.",
+      disabilityRequired: "Hlokega."
+    }
+  },
+
+  ts: {
+    fullNames: "Mavito ya xikarhi",
+    email: "Imeili",
+    password: "Phasiwedi",
+    confirmPassword: "Tiyisisa Phasiwedi",
+    contactDetails: "Vuxokoxoko bya vuxavisi",
+    phonePlaceholder: "78 *** ****",
+    dob: "Siku ra ku velekiwa",
+    sex: "Rimbewu",
+    male: "Xivato",
+    female: "Xisati",
+    ethnicity: "Vuxaka",
+    african: "MuAfrika",
+    white: "Muhlovo",
+    coloured: "MuTshangana",
+    indian: "MuIndiya",
+    homeLanguage: "Ririmi ra le kaya",
+    sepedi: "Sepedi",
+    xitsonga: "Xitsonga",
+    tshivenda: "Tshivenda",
+    location: "Ndhawu ya sweswi",
+    hasLicense: "Ndzi na layisense ya ku famba",
+    hasDisability: "Xana u hanya na vuvabyi byo karhi?",
+    disabilityPlaceholder: "Komisa laha",
+    select: "Hlawula",
+    submit: "Tumela",
+    posting: "Ku tumela...",
+    errors: {
+      fullNamesRequired: "Swi laveka. Hi kombela u nghenisa mavito ya wena.",
+      fullNamesPattern: "Mavito ntsena. Mavito lama nga ehansi ka 2 a ma amukeleki.",
+      emailRequired: "Swi laveka. Nghenisa imeili ya wena.",
+      emailInvalid: "Fomati ya imeili a yi lulamanga.",
+      passwordRequired: "Phasiwedi yi laveka.",
+      passwordPattern: "Phasiwedi yi fanele ku va na 8+ timhaka, ku katsa tinyiko, tinomboro, na swifaniso.",
+      confirmPasswordRequired: "Tiyisisa phasiwedi ya laveka.",
+      passwordMismatch: "Tiphasiwedi a ti fambelani.",
+      phoneRequired: "Swi laveka. Nghenisa nomboro ya sele.",
+      phonePattern: "Fomati ya nomboro ya sele a yi lulamanga.",
+      dobRequired: "Swi laveka.",
+      sexRequired: "Swi laveka.",
+      ethnicityRequired: "Swi laveka.",
+      homeLanguageRequired: "Swi laveka.",
+      locationRequired: "Swi laveka.",
+      disabilityRequired: "Swi laveka."
+    }
+  }
+};
 
 
 const skillsList = [

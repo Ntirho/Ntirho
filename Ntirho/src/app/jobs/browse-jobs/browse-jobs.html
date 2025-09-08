@@ -7,7 +7,7 @@
       </div>
 
       <div class="flex flex-col">
-        <app-voice-search (search)="handleVoiceSearch($event)"></app-voice-search>
+        <app-voice-search (skills)="handleVoiceSkills($event)" (search)="handleVoiceSearch($event)"></app-voice-search>
       </div>
 
       <div class="p-4 rounded-lg bg-card bg-neutral-50 shadow-sm">
@@ -17,13 +17,13 @@
             <input
               class="input rounded-lg h-10 px-2.5 bg-cyan-100"
               [placeholder]="translations.locationPlaceholder"
-              [(ngModel)]="locationFilter"
+              [(ngModel)]="locationFilter" (change)="addFilterOptions(locationFilter)"
             />
           </div>
 
           <div class="grid gap-1.5">
             <label class="text-sm font-medium">{{ translations.skillsLabel }}</label>
-            <select class="select rounded-lg h-10 px-2.5 bg-cyan-100 cursor-pointer" [(ngModel)]="skillFilter">
+            <select class="select rounded-lg h-10 px-2.5 bg-cyan-100 cursor-pointer" (change)="addFilterOptions(skillFilter)" (ngModelChange)="cdr.markForCheck()" [(ngModel)]="skillFilter">
               <option value="all">{{ translations.allSkills }}</option>
               <option *ngFor="let skill of skillsList" [value]="skill.value">{{ skill.label }}</option>
             </select>
@@ -35,6 +35,17 @@
             <i class="bx bx-filter mr-2 h-4 w-4"></i>
             {{ translations.clearFilters }}
           </button>
+        </div>
+
+        <!-- To display filter options chosen -->
+        <div *ngIf="filterList.length > 0"
+          class="flex flex-wrap rounded border-gray-400 m-2 p-2 gap-1.5 overflow-hidden">
+          <div *ngFor="let filterOption of filterList" class="flex flex-row w-fit row rounded-2xl bg-amber-100 m-2 p-2 gap-1.5 items-center">
+            {{ filterOption }}
+            <button type="submit" (click)="removeFilterOption(filterOption)">
+              <i class="bx bx-x cursor-pointer hover:bg-amber-400 rounded-full"></i>
+            </button>
+          </div>
         </div>
       </div>
 

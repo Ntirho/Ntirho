@@ -107,7 +107,8 @@ export interface Education {
 
 export interface Experience {
   experience_id: number;
-  user_id: number;
+  user_id: string;
+  organization?: string,
   title?: string;
   description?: string;
   start_date?: string;
@@ -117,7 +118,7 @@ export interface Experience {
 
 export interface Certificate {
   certificate_id: number;
-  user_id: number;
+  user_id: string;
   title: string;
   issuer?: string;
   issue_date?: string;

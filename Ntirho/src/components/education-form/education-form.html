@@ -2,55 +2,55 @@
 
   <!-- Institution -->
   <div class="flex flex-col">
-    <label class="font-medium">School or Institution</label>
+    <label class="font-medium">{{ translations.institutionLabel }}</label>
     <input
       type="text"
       formControlName="institution"
-      placeholder="e.g. Lancea Vale Secondary School"
+      [placeholder]="translations.institutionPlaceholder"
       class="bg-gray-200 h-8 p-2 rounded"
     />
     <div *ngIf="form.get('institution')?.invalid && form.get('institution')?.touched" class="text-red-500 text-sm">
-      Required.
+      {{ translations.institutionLabel }}
     </div>
   </div>
 
   <!-- Qualification -->
   <div class="flex flex-col">
-    <label class="font-medium">Qualification or Study Programme</label>
+    <label class="font-medium">{{ translations.qualificationLabel }}</label>
     <select formControlName="qualification" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
-      <option value="">Select</option>
+      <option value="">{{ translations.qualificationSelect }}</option>
       <option *ngFor="let q of qualifications" [value]="q">{{ q }}</option>
     </select>
     <div *ngIf="form.get('qualification')?.invalid && form.get('qualification')?.touched" class="text-red-500 text-sm">
-      Required.
+      {{ translations.errors.invalidQualification }}
     </div>
   </div>
 
   <!-- Start Date -->
   <div class="flex flex-col">
-    <label class="font-medium">Start Date</label>
+    <label class="font-medium">{{ translations.startDateLabel }}</label>
     <input type="date" formControlName="start_date" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
-    <div *ngIf="form.get('startDate')?.invalid && form.get('startDate')?.touched" class="text-red-500 text-sm">
-      Required.
+    <div *ngIf="form.get('start_date')?.invalid && form.get('start_date')?.touched" class="text-red-500 text-sm">
+      {{ translations.errors.required }}
     </div>
   </div>
 
   <!-- Completion Date -->
   <div class="flex flex-col">
-    <label class="font-medium">Completion Date</label>
+    <label class="font-medium">{{ translations.completionDateLabel }}</label>
     <input type="date" formControlName="completion_date" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
-    <div *ngIf="form.get('completionDate')?.invalid && form.get('completionDate')?.touched" class="text-red-500 text-sm">
-      Required.
+    <div *ngIf="form.get('completion_date')?.invalid && form.get('completion_date')?.touched" class="text-red-500 text-sm">
+      {{ translations.errors.required }}
     </div>
   </div>
 
   <!-- Academic Average -->
   <div class="flex flex-col">
-    <label class="font-medium">Academic Average</label>
+    <label class="font-medium">{{ translations.academicAverageLabel }}</label>
     <input type="range" formControlName="average" min="0" max="100" class="bg-gray-200 h-2 rounded-full cursor-pointer" />
     <span class="text-sm text-gray-600 mt-1">{{ form.get('average')?.value }}%</span>
     <div *ngIf="form.get('average')?.invalid && form.get('average')?.touched" class="text-red-500 text-sm">
-      Required.
+      {{ translations.errors.required }}
     </div>
   </div>
 
@@ -60,8 +60,8 @@
     type="submit"
     class="bg-amber-500 hover:bg-amber-400 text-white px-6 py-2 rounded cursor-pointer"
   >
-    <span *ngIf="isLoading">Saving...</span>
-    <span *ngIf="!isLoading">Save Education</span>
+    <span *ngIf="isLoading">{{ translations.saving }}</span>
+    <span *ngIf="!isLoading">{{ translations.saveEducation }}</span>
   </button>
 </div>
 

@@ -1,7 +1,7 @@
 <div class="w-full shadow-2xl bg-neutral-50 rounded">
   <div class="text-center p-6">
-    <h2 class="text-3xl font-bold font-headline">{{ translations.welcomeBack }}</h2>
-    <!-- <p class="text-muted-foreground">{{ translations.magicLinkPrompt }}</p> -->
+    <h2 class="text-3xl font-bold font-headline">{{ translations[currentLang]?.welcomeBack }}</h2>
+    <!-- <p class="text-muted-foreground">{{ translations[currentLang]?.magicLinkPrompt }}</p> -->
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 px-6 pb-6">
@@ -10,12 +10,12 @@
         <input
           type="email"
           formControlName="email"
-          [placeholder]="translations.emailPlaceholder"
+          [placeholder]="translations[currentLang]?.emailPlaceholder"
           class="w-full border rounded p-2 bg-blue-200"
-          required="Please enter your email."
+          required
         />
         <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="text-red-500 text-sm mt-1">
-          Please enter your email.
+          {{ translations[currentLang]?.emailError }}
         </div>
       </div>
     </div>
@@ -24,12 +24,12 @@
       <input
         type="password"
         formControlName="password"
-        placeholder="Password"
+        [placeholder]="translations[currentLang]?.passwordPlaceholder"
         class="w-full border rounded p-2 bg-blue-200"
         required
       />
       <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="text-red-500 text-sm mt-1">
-        Please enter your password.
+        {{ translations[currentLang]?.passwordError }}
       </div>
     </div>
 
@@ -37,61 +37,57 @@
       <button
         type="submit"
         class="w-full bg-blue-400 text-white py-2 rounded hover:bg-blue-500/90 flex items-center justify-center cursor-pointer"
-        
       >
         <i *ngIf="isLoading" class="bx bx-loader-alt animate-spin mr-2 text-lg"></i>
-        {{ translations.sendMagicLink }}
+        {{ translations[currentLang]?.login }}
       </button>
       <div class="flex flex-row justify-center items-center underline underline-offset-2 cursor-pointer">
-        <a (click)="onOpenModal()" class="text-orange-500 hover:text-orange-400 text-sm">Forgot password</a>
+        <a (click)="onOpenModal()" class="text-orange-500 hover:text-orange-400 text-sm">
+          {{ translations[currentLang]?.forgotPassword }}
+        </a>
       </div>
     </div>
   </form>
 </div>
 
-<!-- Handling Forgotten Passwords -->
- <!-- Backdrop -->
+<!-- Modal -->
 <div *ngIf="openModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <!-- Modal Container -->
   <div class="bg-white w-full max-w-md p-6 rounded-xl shadow-2xl animate-fade-in m-4">
-    
-    <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-      <h3 class="text-2xl font-bold text-gray-800 font-headline">🔐 Reset Your Password</h3>
+      <h3 class="text-2xl font-bold text-gray-800 font-headline">🔐 {{ translations[currentLang]?.resetPasswordTitle }}</h3>
       <button (click)="closeModal()" aria-label="Close modal" class="text-red-500 hover:text-red-400 cursor-pointer transition">
         <i class="bx bx-x text-2xl"></i>
       </button>
     </div>
 
-    <!-- Body -->
     <div class="space-y-4">
-      <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-      <input 
+      <label for="email" class="block text-sm font-medium text-gray-700">
+        {{ translations[currentLang]?.emailLabel }}
+      </label>
+      <input
         id="email"
-        type="email" 
-        [(ngModel)]="email" 
-        required 
+        type="email"
+        [(ngModel)]="email"
+        required
         class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-        placeholder="you@example.com"
+        [placeholder]="translations[currentLang]?.emailPlaceholder"
       />
       <div *ngIf="!email && emailPresent" class="text-red-500 text-sm">
-        Required
+        {{ translations[currentLang]?.requiredField }}
       </div>
 
       <p class="text-sm text-gray-500">
-        We’ll send a secure link to reset your password. Make sure it’s the email you used to sign up.
+        {{ translations[currentLang]?.resetInstructions }}
       </p>
     </div>
 
-    <!-- Footer -->
     <div class="flex justify-center mt-6">
-      <button 
-        (click)="onEmailSubmit()" 
+      <button
+        (click)="onEmailSubmit()"
         class="bg-green-600 hover:bg-green-500 text-white cursor-pointer font-semibold px-6 py-2 rounded-lg shadow-md transition duration-200"
       >
-        Send Reset Link
+        {{ translations[currentLang]?.sendResetLink }}
       </button>
     </div>
   </div>
 </div>
-

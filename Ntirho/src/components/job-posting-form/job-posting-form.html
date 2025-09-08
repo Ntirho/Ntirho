@@ -8,7 +8,7 @@
       class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
     />
     <div *ngIf="form.get('title')?.invalid && (form.get('title')?.touched || triedValidation)" class="text-red-500 text-sm">
-      Required. Please enter a valid job title.
+      {{ translations.jobTitleError }}
     </div>
   </div>
 
@@ -21,7 +21,7 @@
       class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
     />
     <div *ngIf="form.get('company')?.invalid && (form.get('company')?.touched || triedValidation)" class="text-red-500 text-sm">
-      Required. Please enter a valid company name.
+      {{ translations.companyError }}
     </div>
   </div>
 
@@ -34,7 +34,7 @@
       class="w-full border border-gray-300 rounded-md px-2 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
     />
     <div *ngIf="form.get('location')?.invalid && (form.get('location')?.touched || triedValidation)" class="text-red-500 text-sm">
-      Required. Please enter a valid location.
+      {{ translations.locationError }}
     </div>
   </div>
 
@@ -48,7 +48,7 @@
       rows="4"
     ></textarea>
     <div *ngIf="form.get('description')?.invalid && (form.get('description')?.touched || triedValidation)" class="text-red-500 text-sm">
-      Required. Please enter a valid job description.
+      {{ translations.descriptionError }}
     </div>
   </div>
 
@@ -77,7 +77,7 @@
 
     <small class="text-gray-500">{{ translations.skillsDescription }}</small>
     <div *ngIf="form.get('skills')?.invalid && form.get('skills')?.touched" class="text-red-500 text-sm">
-      Required. Please select the appropriate skills.
+      {{ translations.skillsError }}
     </div>
   </div>
 

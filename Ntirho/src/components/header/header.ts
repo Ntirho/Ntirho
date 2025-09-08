@@ -20,6 +20,7 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class Header implements OnInit {
   translations: any = {};
+  currentLang: Language = 'en';
   isAuthenticated = false;
   pathname = '';
   langMenuOpen = false;
@@ -33,7 +34,9 @@ export class Header implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.translations = this.languageService.translations;
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations[this.currentLang];
     // this.isAuthenticated = this.authService.isAuthenticated();
     //this.pathname = this.router.url;
 
@@ -51,7 +54,8 @@ export class Header implements OnInit {
 
   setLanguage(lang: Language) {
     this.languageService.setLanguage(lang);
-    this.translations = this.languageService.translations;
+    this.currentLang = lang;
+    this.translations = translations[this.currentLang];
     this.langMenuOpen = false;
 
     // Notify the UI
@@ -73,3 +77,41 @@ export class Header implements OnInit {
   }
 }
 
+const translations = {
+  en: {
+    toggleLanguage: "Toggle language",
+    logo: "Ntirho",
+    languageOptionEnglish: "English",
+    languageOptionSepedi: "Sepedi",
+    myAccount: "My Account",
+    profile: "Profile",
+    myMatches: "My Matches",
+    findAJob: "Find a Job",
+    logOut: "Log Out",
+    logIn: "Log In"
+  },
+  nso: {
+    toggleLanguage: "Fetola polelo",
+    logo: "Ntirho",
+    languageOptionEnglish: "Sekgowa",
+    languageOptionSepedi: "Sepedi",
+    myAccount: "Akhaonto ya ka",
+    profile: "Purofaele",
+    myMatches: "Masepelo a ka",
+    findAJob: "Hwetša Mošomo",
+    logOut: "Tšwa",
+    logIn: "Kena"
+  },
+  ts: {
+    toggleLanguage: "Cinca ririmi",
+    logo: "Ntirho",
+    languageOptionEnglish: "Xinghezi",
+    languageOptionSepedi: "Sepedi",
+    myAccount: "Akhawunti ya mina",
+    profile: "Profayela",
+    myMatches: "Swikombiso swa mina",
+    findAJob: "Kuma ntirho",
+    logOut: "Huma",
+    logIn: "Nghena"
+  }
+};

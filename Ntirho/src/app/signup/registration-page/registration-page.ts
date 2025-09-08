@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { LanguageService } from '../../../services/language';
+import { Language, LanguageService } from '../../../services/language';
 import { RegistrationForm } from "../../../components/registration-form/registration-form";
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 })
 export class RegistrationPage implements OnInit {
   translations: any = {};
+  currentLang: Language = 'en';
   form!: FormGroup;
   continue = false;
 
@@ -54,7 +55,9 @@ export class RegistrationPage implements OnInit {
   }
 
   ngOnInit(): void {
-      this.translations = this.languageService.translations;
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations[this.currentLang];
   }
 
   // Submission function
@@ -95,3 +98,15 @@ export class RegistrationPage implements OnInit {
   }
 
 }
+
+export const translations = {
+  en: {
+    createAccountTitle: "Create Account"
+  },
+  nso: {
+    createAccountTitle: "Bopa Akhaonto"
+  },
+  ts: {
+    createAccountTitle: "Tumbuluxa Akhawunti"
+  }
+};

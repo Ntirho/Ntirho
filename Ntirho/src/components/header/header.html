@@ -24,13 +24,13 @@
       <div class="relative">
         <button (click)="toggleLangMenu()" class="h-12 w-12 rounded-full cursor-pointer">
           <i class="bx bx-globe text-2xl"></i>
-          <span class="sr-only">Toggle language</span>
+          <span class="sr-only">{{ translations.toggleLanguage }}</span>
         </button>
         <div *ngIf="langMenuOpen" class="absolute right-0 mt-2 bg-white shadow rounded">
           <button (click)="setLanguage('en')" class="block px-4 py-2 w-full text-left cursor-pointer">
             {{ translations.languageOptionEnglish }}
           </button>
-          <button (click)="setLanguage('se')" class="block px-4 py-2 w-full text-left cursor-pointer">
+          <button (click)="setLanguage('nso')" class="block px-4 py-2 w-full text-left cursor-pointer">
             {{ translations.languageOptionSepedi }}
           </button>
         </div>
@@ -38,7 +38,7 @@
 
       <!-- Auth Dropdown -->
       <ng-container *ngIf="isAuthenticated">
-        <ng-container *ngIf="!['/', '/post-job', '/signup'].includes(pathname)">
+        <ng-container *ngIf="!['/', '/post-job', '/signup', '/reset-password'].includes(pathname)">
           <div class="relative">
             <button (click)="toggleUserMenu()" class="relative h-12 w-12 rounded-full cursor-pointer">
               <i class="bx bx-user-circle text-2xl"></i>

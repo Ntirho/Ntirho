@@ -1,72 +1,60 @@
-<!-- registration-form.component.html-->
-
- <form [formGroup]="personalDetailsForm" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
+<form [formGroup]="personalDetailsForm" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
 
   <!-- Full Names -->
   <div class="flex flex-col">
-    <label class="font-medium">Full Names</label>
+    <label class="font-medium">{{ translations[currentLang]?.fullNames }}</label>
     <input type="text" formControlName="fullNames" class="bg-gray-200 h-8 p-2 rounded" />
-    <div 
-      *ngIf="personalDetailsForm.get('fullNames')?.errors && 
-            (personalDetailsForm.get('fullNames')?.touched || !isValidated)" 
-      class="text-red-500 text-sm"
-    >
+    <div *ngIf="personalDetailsForm.get('fullNames')?.errors && (personalDetailsForm.get('fullNames')?.touched || !isValidated)" class="text-red-500 text-sm">
       <span *ngIf="personalDetailsForm.get('fullNames')?.errors?.['required']">
-        Required. Please enter your full name.
+        {{ translations[currentLang]?.errors?.fullNamesRequired }}
       </span>
       <span *ngIf="personalDetailsForm.get('fullNames')?.errors?.['pattern']">
-        Only letters and spaces allowed. Minimum 2 characters.
+        {{ translations[currentLang]?.errors?.fullNamesPattern }}
       </span>
     </div>
-
   </div>
 
   <!-- Email -->
   <div class="flex flex-col">
-    <label class="font-medium">Email</label>
+    <label class="font-medium">{{ translations[currentLang]?.email }}</label>
     <input type="email" formControlName="email" class="bg-gray-200 h-8 p-2 rounded" />
-    <div 
-      *ngIf="personalDetailsForm.get('email')?.errors && 
-            (personalDetailsForm.get('email')?.touched || !isValidated)" 
-      class="text-red-500 text-sm"
-    >
+    <div *ngIf="personalDetailsForm.get('email')?.errors && (personalDetailsForm.get('email')?.touched || !isValidated)" class="text-red-500 text-sm">
       <span *ngIf="personalDetailsForm.get('email')?.errors?.['required']">
-        Required. Please enter your email address.
+        {{ translations[currentLang]?.errors?.emailRequired }}
       </span>
       <span *ngIf="personalDetailsForm.get('email')?.errors?.['email']">
-        Invalid format. Please enter a valid email address.
+        {{ translations[currentLang]?.errors?.emailInvalid }}
       </span>
     </div>
-
   </div>
 
-<!-- Password -->
-<div class="flex flex-col">
-  <label class="font-medium">Password</label>
-  <input type="password" formControlName="password" class="h-8 bg-gray-200 rounded-sm p-2"/>
-  <div *ngIf="personalDetailsForm.get('password')?.errors?.['required'] && personalDetailsForm.get('password')?.touched" class="text-red-500 text-sm">
-    Password is required.
+  <!-- Password -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations[currentLang]?.password }}</label>
+    <input type="password" formControlName="password" class="h-8 bg-gray-200 rounded-sm p-2"/>
+    <div *ngIf="personalDetailsForm.get('password')?.errors?.['required'] && personalDetailsForm.get('password')?.touched" class="text-red-500 text-sm">
+      {{ translations[currentLang]?.errors?.passwordRequired }}
+    </div>
+    <div *ngIf="personalDetailsForm.get('password')?.errors?.['pattern'] && personalDetailsForm.get('password')?.touched" class="text-red-500 text-sm">
+      {{ translations[currentLang]?.errors?.passwordPattern }}
+    </div>
   </div>
-  <div *ngIf="personalDetailsForm.get('password')?.errors?.['pattern'] && personalDetailsForm.get('password')?.touched" class="text-red-500 text-sm">
-    Must be at least 8 characters, include uppercase, lowercase, number, and special character.
-  </div>
-</div>
 
-<!-- Confirm password -->
-<div class="flex flex-col">
-  <label class="font-medium">Confirm Password</label>
-  <input type="password" formControlName="confirmPassword" class="h-8 bg-gray-200 rounded-sm p-2"/>
-  <div *ngIf="personalDetailsForm.hasError('mismatch') && personalDetailsForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
-    Passwords do not match.
+  <!-- Confirm Password -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations[currentLang]?.confirmPassword }}</label>
+    <input type="password" formControlName="confirmPassword" class="h-8 bg-gray-200 rounded-sm p-2"/>
+    <div *ngIf="personalDetailsForm.hasError('mismatch') && personalDetailsForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
+      {{ translations[currentLang]?.errors?.passwordMismatch }}
+    </div>
+    <div *ngIf="personalDetailsForm.get('confirmPassword')?.errors?.['required'] && personalDetailsForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
+      {{ translations[currentLang]?.errors?.confirmPasswordRequired }}
+    </div>
   </div>
-  <div *ngIf="personalDetailsForm.get('confirmPassword')?.errors?.['required'] && personalDetailsForm.get('confirmPassword')?.touched" class="text-red-500 text-sm">
-    Confirm password is required.
-  </div>
-</div>
 
   <!-- Contact Details -->
   <div class="flex flex-col">
-    <label class="font-medium">Contact Details</label>
+    <label class="font-medium">{{ translations[currentLang]?.contactDetails }}</label>
     <div formGroupName="contact" class="flex gap-3.5">
       <select formControlName="countryCode" class="bg-gray-200 px-1.5 rounded h-8 cursor-pointer w-1/3">
         <option value="+27">+27</option>
@@ -74,100 +62,95 @@
         <option value="+234">+234</option>
       </select>
       <div class="flex flex-col">
-        <input type="tel" formControlName="phone" class="bg-gray-200 h-8 p-2 rounded w-2/3" placeholder="78 *** ****" />
-        <div 
-        *ngIf="personalDetailsForm.get('contact.phone')?.errors && 
-              (personalDetailsForm.get('contact.phone')?.touched || !isValidated)" 
-        class="text-red-500 text-sm"
-      >
-        <span *ngIf="personalDetailsForm.get('contact.phone')?.errors?.['required']">
-          Required. Please enter your cell number.
-        </span>
-        <span *ngIf="personalDetailsForm.get('contact.phone')?.errors?.['pattern']">
-          Invalid format. Please enter a valid 9-digit cell number.
-        </span>
-      </div>
-
+        <input type="tel" formControlName="phone" class="bg-gray-200 h-8 p-2 rounded w-2/3" [placeholder]="translations[currentLang]?.phonePlaceholder" />
+        <div *ngIf="personalDetailsForm.get('contact.phone')?.errors && (personalDetailsForm.get('contact.phone')?.touched || !isValidated)" class="text-red-500 text-sm">
+          <span *ngIf="personalDetailsForm.get('contact.phone')?.errors?.['required']">
+            {{ translations[currentLang]?.errors?.phoneRequired }}
+          </span>
+          <span *ngIf="personalDetailsForm.get('contact.phone')?.errors?.['pattern']">
+            {{ translations[currentLang]?.errors?.phonePattern }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Date of Birth -->
   <div class="flex flex-col">
-    <label class="font-medium">Date of Birth</label>
+    <label class="font-medium">{{ translations[currentLang]?.dob }}</label>
     <input type="date" formControlName="date_of_birth" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
-    <div *ngIf="personalDetailsForm.get('dob')?.invalid && (personalDetailsForm.get('dob')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required.
+    <div *ngIf="personalDetailsForm.get('date_of_birth')?.invalid && (personalDetailsForm.get('date_of_birth')?.touched || !isValidated)" class="text-red-500 text-sm">
+      {{ translations[currentLang]?.errors?.dobRequired }}
     </div>
   </div>
 
   <!-- Sex -->
   <div class="flex flex-col">
-    <label class="font-medium">Sex</label>
+    <label class="font-medium">{{ translations[currentLang]?.sex }}</label>
     <select formControlName="sex" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
-      <option value="">Select</option>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
+      <option value="">{{ translations[currentLang]?.select }}</option>
+      <option value="male">{{ translations[currentLang]?.male }}</option>
+      <option value="female">{{ translations[currentLang]?.female }}</option>
     </select>
     <div *ngIf="personalDetailsForm.get('sex')?.invalid && (personalDetailsForm.get('sex')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required. 
+      {{ translations[currentLang]?.errors?.sexRequired }}
     </div>
   </div>
 
   <!-- Ethnicity -->
   <div class="flex flex-col">
-    <label class="font-medium">Ethnicity</label>
+    <label class="font-medium">{{ translations[currentLang]?.ethnicity }}</label>
     <select formControlName="ethnicity" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
-      <option value="">Select</option>
-      <option value="African">African</option>
-      <option value="White">White</option>
-      <option value="Coloured">Coloured</option>
-      <option value="Indian">Indian</option>
+      <option value="">{{ translations[currentLang]?.select }}</option>
+      <option value="African">{{ translations[currentLang]?.african }}</option>
+      <option value="White">{{ translations[currentLang]?.white }}</option>
+      <option value="Coloured">{{ translations[currentLang]?.coloured }}</option>
+      <option value="Indian">{{ translations[currentLang]?.indian }}</option>
     </select>
     <div *ngIf="personalDetailsForm.get('ethnicity')?.invalid && (personalDetailsForm.get('ethnicity')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required.
+      {{ translations[currentLang]?.errors?.ethnicityRequired }}
     </div>
   </div>
 
   <!-- Home Language -->
   <div class="flex flex-col">
-    <label class="font-medium">Home Language</label>
+    <label class="font-medium">{{ translations[currentLang]?.homeLanguage }}</label>
     <select formControlName="homeLanguage" class="bg-gray-200 h-8 px-2 rounded cursor-pointer">
-      <option value="">Select</option>
-      <option value="Sepedi">Sepedi</option>
-      <option value="Xitsonga">Xitsonga</option>
-      <option value="Tshivenda">Tshivenda</option>
+      <option value="">{{ translations[currentLang]?.select }}</option>
+      <option value="Sepedi">{{ translations[currentLang]?.sepedi }}</option>
+      <option value="Xitsonga">{{ translations[currentLang]?.xitsonga }}</option>
+      <option value="Tshivenda">{{ translations[currentLang]?.tshivenda }}</option>
     </select>
     <div *ngIf="personalDetailsForm.get('homeLanguage')?.invalid && (personalDetailsForm.get('homeLanguage')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required. 
+      {{ translations[currentLang]?.errors?.homeLanguageRequired }}
     </div>
   </div>
 
   <!-- Current Location -->
   <div class="flex flex-col">
-    <label class="font-medium">Current Location</label>
+    <label class="font-medium">{{ translations[currentLang]?.location }}</label>
     <input type="text" formControlName="location" class="bg-gray-200 h-8 p-2 rounded" />
     <div *ngIf="personalDetailsForm.get('location')?.invalid && (personalDetailsForm.get('location')?.touched || !isValidated)" class="text-red-500 text-sm">
-      Required.
+      {{ translations[currentLang]?.errors?.locationRequired }}
     </div>
   </div>
 
   <!-- Driver's License -->
   <div class="flex items-center">
     <input type="checkbox" formControlName="hasLicense" class="cursor-pointer" />
-    <label class="px-2 font-medium">I have a valid driver's license</label>
+    <label class="px-2 font-medium">{{ translations[currentLang]?.hasLicense }}</label>
   </div>
 
   <!-- Disability -->
   <div class="flex flex-col">
     <div class="flex items-center">
       <input type="checkbox" formControlName="hasDisability" class="cursor-pointer" />
-      <label class="px-2 font-medium">Are you living with disabilities?</label>
+      <label class="px-2 font-medium">{{ translations[currentLang]?.hasDisability }}</label>
     </div>
     <div *ngIf="showDisabilityDetails" class="flex flex-col">
-      <input type="text" formControlName="disabilityDetails" placeholder="Please specify" class="bg-gray-200 h-8 p-2 rounded mt-2" />
+      <input type="text" formControlName="disabilityDetails" [placeholder]="translations[currentLang]?.disabilityPlaceholder" class="bg-gray-200 h-8 p-2 rounded mt-2" />
       <div *ngIf="personalDetailsForm.get('disabilityDetails')?.invalid && (personalDetailsForm.get('disabilityDetails')?.touched || !isValidated)" class="text-red-500 text-sm">
-        Required. 
+        {{ translations[currentLang]?.errors?.disabilityRequired }}
       </div>
     </div>
   </div>
@@ -175,49 +158,9 @@
   <!-- Submit -->
   <div class="flex flex-col justify-center">
     <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-white px-4 py-2 rounded cursor-pointer transition">
-      <span *ngIf="isLoading">Posting...</span>
-      <span *ngIf="!isLoading">Submit</span>
+      <span *ngIf="isLoading">{{ translations[currentLang]?.posting }}</span>
+      <span *ngIf="!isLoading">{{ translations[currentLang]?.submit }}</span>
     </button>
   </div>
+
 </form>
-
-
-<!--<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8">
-  <label>{{ translations.nameLabel }}</label>
-  <input formControlName="name" [placeholder]="translations.namePlaceholder" />
-  <div *ngIf="form.get('name')?.invalid">{{ translations.nameError }}</div>
-
-  <label>{{ translations.emailLabel }}</label>
-  <input formControlName="email" [placeholder]="translations.emailPlaceholder" />
-  <div *ngIf="form.get('email')?.invalid">{{ translations.emailError }}</div>
-
-  <label>{{ translations.locationLabel }}</label>
-  <input formControlName="location" [placeholder]="translations.locationPlaceholder" />
-  <div *ngIf="form.get('location')?.invalid">{{ translations.locationError }}</div>
-
-  <label>{{ translations.skillsLabel }}</label>
-  <div class="skills-dropdown">
-    <button type="button" (click)="showSkills = !showSkills">
-      {{ form.value.skills.length
-        ? form.value.skills.map(skillsList).join(', ')
-        : translations.skillsPlaceholder }}
-    </button>
-    <div *ngIf="showSkills">
-      <div *ngFor="let skill of skillsList">
-        <input
-          type="checkbox"
-          [checked]="isSelected(skill.value)"
-          (change)="toggleSkill(skill.value)"
-        />
-        {{ skill.label }}
-      </div>
-    </div>
-  </div>
-  <small>{{ translations.skillsDescriptionProfile }}</small>
-  <div *ngIf="form.get('skills')?.invalid">{{ translations.skillsError }}</div>
-
-  <button type="submit" [disabled]="isLoading">
-    <span *ngIf="isLoading">Loading...</span>
-    {{ translations.submit }}
-  </button>
-</form> -->

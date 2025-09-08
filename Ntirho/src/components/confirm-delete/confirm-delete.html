@@ -1,0 +1,25 @@
+<div *ngIf="openModal" class="fixed inset-0 bg-[rgba(128,128,128,0.4)] flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-auto">
+    <div class="flex flex-row justify-center items-center m-5">
+        <h2 class="text-xl font-bold mb-4">{{ deleteLabel }}</h2>
+        <!-- <button (click)="onClose()" class="bg-red-500 font-extrabold rounded-full hover:bg-red-400 cursor-pointer">
+            <i class="bx bx-x text-white text-lg p-2"></i>
+        </button> -->
+    </div>
+
+    <!-- Message -->
+    <div class="flex gap-2.5 m-2 p-2">
+        {{ translations.confirmDelete.replace('{{item}}', message) }}
+    </div>
+
+    <div class="flex justify-center gap-2 pt-4">
+      <button (click)="onDelete()" class="bg-red-500 hover:bg-red-400 cursor-pointer rounded-lg p-2 items-center w-md">
+        {{ translations.delete }}
+      </button>
+      <button (click)="onClose()" class="bg-green-500 text-accent-foreground hover:bg-green-400 cursor-pointer rounded-lg w-md">
+        {{ translations.cancel }}
+      </button>
+    </div>
+
+  </div>
+</div>

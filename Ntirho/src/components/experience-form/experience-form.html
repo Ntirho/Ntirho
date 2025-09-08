@@ -1,0 +1,72 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
+
+  <!-- Company -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations.organizationLabel }}</label>
+    <input
+        type="text"
+        formControlName="organization"
+        class="bg-gray-200 h-8 p-2 rounded"
+    />
+    <div *ngIf="form.get('organization')?.invalid && form.get('organization')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations.jobTitlePlaceholder }}</label>
+    <input
+      type="text"
+      formControlName="title"
+      placeholder="e.g. Junior Software Engineer"
+      class="bg-gray-200 h-8 p-2 rounded"
+    />
+    <div *ngIf="form.get('title')?.invalid && form.get('title')?.touched" class="text-red-500 text-sm">
+      Required.
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations.descriptionLabel }}</label>
+    <textarea 
+      rows="5"
+      formControlName="description" 
+      class="bg-gray-200 p-2 rounded"
+    ></textarea>
+    <div *ngIf="form.get('description')?.invalid && form.get('description')?.touched" class="text-red-500 text-sm">
+      {{ translations.invalidDescription }}
+    </div>
+  </div>
+
+  <!-- Start Date -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations.startDateLabel }}</label>
+    <input type="date" formControlName="start_date" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <div *ngIf="form.get('start_date')?.invalid && form.get('start_date')?.touched" class="text-red-500 text-sm">
+      {{ translations.requiredField }}
+    </div>
+  </div>
+
+  <!-- End Date -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations.endDateLabel }}</label>
+    <input type="date" formControlName="end_date" class="bg-gray-200 h-8 p-2 rounded cursor-pointer" />
+    <div *ngIf="form.get('end_date')?.invalid && form.get('end_date')?.touched" class="text-red-500 text-sm">
+      {{ translations.requiredField }}
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+<div class="flex flex-col justify-center">
+  <button
+    type="submit"
+    class="bg-amber-500 hover:bg-amber-400 text-white px-6 py-2 rounded cursor-pointer"
+  >
+    <span *ngIf="isLoading">{{ translations.saveExperience }}</span>
+    <span *ngIf="!isLoading">{{ translations.save }}</span>
+  </button>
+</div>
+
+</form>

@@ -3,6 +3,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { JobMatch, Job, dummyJobs } from '../../interfaces';
 import { Modal } from '../modal/modal';
 import { Database } from '../../services/database';
+import { Language, LanguageService } from '../../services/language';
+import { Translation } from '../../contexts/language-context';
 
 @Component({
   selector: 'app-matched-job-card',
@@ -18,9 +20,16 @@ export class MatchedJobCard implements OnChanges, OnInit{
   temp_job!: Job;
   jobs: Job[] = [];
 
-  constructor(private db: Database){}
+  currentLang: Language = 'en';
+  translations: any = {};
+
+  constructor(private db: Database, private languageService: LanguageService){}
 
   ngOnInit(): void {
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations; 
+
     // Set the jobs
     this.getJobs();   
   }
@@ -57,3 +66,18 @@ export class MatchedJobCard implements OnChanges, OnInit{
     this.isModalOpen = false;
   }
 }
+
+const translations = {
+  en: {
+    viewDetails: "View Details",
+    matchScoreSuffix: "%"
+  },
+  nso: {
+    viewDetails: "Bona dintlha",
+    matchScoreSuffix: "%"
+  },
+  ts: {
+    viewDetails: "Vona Vuxokoxoko",
+    matchScoreSuffix: "%"
+  }
+};

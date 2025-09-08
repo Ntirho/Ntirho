@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LanguageService } from '../../services/language';
+import { Language, LanguageService } from '../../services/language';
 import { CommonModule } from '@angular/common';
 import { Database } from '../../services/database';
 import { error } from 'console';
@@ -22,6 +22,7 @@ export class JobPostingForm implements OnInit{
   showSkills = false;
   skillsList = skillsList;
   translations: any = {};
+  currentLang: Language = 'en';
 
   constructor(
     private fb: FormBuilder,
@@ -39,7 +40,9 @@ export class JobPostingForm implements OnInit{
   }
 
   ngOnInit(): void {
-      this.translations = this.languageService.translations;
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations[this.currentLang];
   }
 
   // Set when the button is pressed
@@ -111,6 +114,65 @@ export class JobPostingForm implements OnInit{
 
 }
 
+const translations = {
+  en: {
+    jobTitleLabel: "Job Title",
+    jobTitlePlaceholder: "e.g. Software Engineer",
+    jobTitleError: "Required. Please enter a valid job title.",
+    companyLabel: "Company",
+    companyPlaceholder: "e.g. Microsoft",
+    companyError: "Required. Please enter a valid company name.",
+    locationLabel: "Location",
+    locationPlaceholder: "e.g. Polokwane, Limpopo",
+    locationError: "Required. Please enter a valid location.",
+    descriptionLabel: "Job Description",
+    descriptionPlaceholder: "Brief summary of the role and responsibilities",
+    descriptionError: "Required. Please enter a valid job description.",
+    skillsLabel: "Required Skills",
+    skillsPlaceholder: "Select relevant skills",
+    skillsDescription: "Choose the skills that best match this job.",
+    skillsError: "Required. Please select the appropriate skills.",
+    postJobButton: "Post Job"
+  },
+  nso: {
+    jobTitleLabel: "Tirelo ya Mošomo",
+    jobTitlePlaceholder: "mohl. Moenjineri wa Software",
+    jobTitleError: "Tlhokega. Tsenya leina la mošomo le le nepagetšego.",
+    companyLabel: "Kgwebo",
+    companyPlaceholder: "mohl. Microsoft",
+    companyError: "Tlhokega. Tsenya leina la kgwebo le le nepagetšego.",
+    locationLabel: "Lefelo",
+    locationPlaceholder: "mohl. Polokwane, Limpopo",
+    locationError: "Tlhokega. Tsenya lefelo le le nepagetšego.",
+    descriptionLabel: "Tlhaloso ya Mošomo",
+    descriptionPlaceholder: "Kakaretšo ya mošomo le maikarabelo",
+    descriptionError: "Tlhokega. Tsenya tlhaloso ya mošomo ye e nepagetšego.",
+    skillsLabel: "Bokgoni bjo bo Nyakegago",
+    skillsPlaceholder: "Kgetha bokgoni bjo bo maleba",
+    skillsDescription: "Kgetha bokgoni bjo bo swanago le mošomo wo.",
+    skillsError: "Tlhokega. Kgetha bokgoni bjo bo maleba.",
+    postJobButton: "Romela Mošomo"
+  },
+  ts: {
+    jobTitleLabel: "Xivumbeko xa ntirho",
+    jobTitlePlaceholder: "xik. Injiniya ya Software",
+    jobTitleError: "Swi laveka. Nghenisa xivumbeko xa ntirho lexi nga ntiyiso.",
+    companyLabel: "Kampani",
+    companyPlaceholder: "xik. Microsoft",
+    companyError: "Swi laveka. Nghenisa vito ra khampani leri nga ntiyiso.",
+    locationLabel: "Ndhawu",
+    locationPlaceholder: "xik. Polokwane, Limpopo",
+    locationError: "Swi laveka. Nghenisa ndhawu leyi nga ntiyiso.",
+    descriptionLabel: "Nhlamuselo ya ntirho",
+    descriptionPlaceholder: "Nhlamuselo ya ntirho ni vutihlamuleri",
+    descriptionError: "Swi laveka. Nghenisa nhlamuselo ya ntirho leyi nga ntiyiso.",
+    skillsLabel: "Vutivi byo lavekaka",
+    skillsPlaceholder: "Khetha vutivi lebyi fambelanaka",
+    skillsDescription: "Khetha vutivi lebyi fambelanaka na ntirho lowu.",
+    skillsError: "Swi laveka. Khetha vutivi lebyi faneleke.",
+    postJobButton: "Tumela Ntirho"
+  }
+};
 
 const skillsList = [
   { label: "Construction", value: "construction" },

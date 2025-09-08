@@ -4,6 +4,7 @@ import { passwordsMatchValidator } from '../../../services/auth';
 import { Database } from '../../../services/database';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Language, LanguageService } from '../../../services/language';
 
 @Component({
   selector: 'app-reset-password',
@@ -19,14 +20,23 @@ export class ResetPassword implements OnInit{
 
   message = '';
 
+  // Language
+  currentLang: Language = 'en';
+  translations: any = {};
+
   constructor(
     private fb: FormBuilder, 
     private db: Database,
-    private router: Router
+    private router: Router,
+    private languageService: LanguageService
   ) {}
 
   ngOnInit(): void {
-      this.form = this.fb.group({
+    // Set the language
+    this.currentLang = this.languageService.getLanguage();
+    this.translations = translations; 
+
+    this.form = this.fb.group({
       password: ['', [
         Validators.required,
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
@@ -61,3 +71,48 @@ export class ResetPassword implements OnInit{
     }
   }
 }
+
+const translations = {
+  en: {
+    resetPasswordTitle: "Reset Password",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Enter new password",
+    confirmPasswordLabel: "Confirm Password",
+    confirmPasswordPlaceholder: "Re-enter new password",
+    submit: "Submit",
+    errors: {
+      passwordRequired: "Password is required.",
+      passwordPattern: "Must be at least 8 characters, include uppercase, lowercase, number, and special character.",
+      confirmPasswordRequired: "Confirm password is required.",
+      passwordMismatch: "Passwords do not match."
+    }
+  },
+  nso: {
+    resetPasswordTitle: "Lokisa Phasewete",
+    passwordLabel: "Phasewete",
+    passwordPlaceholder: "Kenya phasewete ye mpsha",
+    confirmPasswordLabel: "Netefatsa Phasewete",
+    confirmPasswordPlaceholder: "Kenya phasewete gape",
+    submit: "Romela",
+    errors: {
+      passwordRequired: "Phasewete e a hlokega.",
+      passwordPattern: "Bonyane ditlhaka tše 8, go akaretša ditlhaka tše dikgolo, tše nnyane, nomoro le sešupo.",
+      confirmPasswordRequired: "Netefatso ya phasewete e a hlokega.",
+      passwordMismatch: "Diphasewete ga di swane."
+    }
+  },
+  ts: {
+    resetPasswordTitle: "Lungisa Phasiwedi",
+    passwordLabel: "Phasiwedi",
+    passwordPlaceholder: "Nghenisa phasiwedi leyintshwa",
+    confirmPasswordLabel: "Tiyisisa Phasiwedi",
+    confirmPasswordPlaceholder: "Nghenisa phasiwedi nakambe",
+    submit: "Tumela",
+    errors: {
+      passwordRequired: "Phasiwedi yi laveka.",
+      passwordPattern: "Yi fanele ku va na 8+ timhaka, ku katsa tinyiko, tinomboro, na swifaniso.",
+      confirmPasswordRequired: "Tiyisisa phasiwedi ya laveka.",
+      passwordMismatch: "Tiphasiwedi a ti fambelani."
+    }
+  }
+};
