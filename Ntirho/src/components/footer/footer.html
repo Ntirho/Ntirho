@@ -18,10 +18,12 @@
         </a>
         <a routerLink="/training" class="hover:text-blue-600 transition-colors text-gray-500 cursor-pointer">
           {{ translations.footerTraining }}
-        </a>
-        <a routerLink="/post-job" class="hover:text-blue-600 transition-colors text-gray-500 cursor-pointer">
+        </a>        
+        <div *ngIf="!['/', '/signup', '/reset-password'].includes(pathName)">
+          <a routerLink="/post-job" class="hover:text-blue-600 transition-colors text-gray-500 cursor-pointer">
           {{ translations.footerPostJob || 'Post a Job' }}
         </a>
+        </div>
       </nav>
 
       <p class="text-sm text-muted-foreground text-gray-500 text-center md:text-right">

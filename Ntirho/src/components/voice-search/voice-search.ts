@@ -49,7 +49,10 @@ export class VoiceSearch {
   ngOnInit(){
     // Set the language
     this.currentLang = this.languageService.getLanguage();
-    this.translations = translations[this.currentLang];
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+      this.translations = translations[this.currentLang];
+    })
 
     // Initiate the engilsh voice recog service
     this.voiceRecognitionService.init();
@@ -196,7 +199,7 @@ export class VoiceSearch {
 const translations = {
   en: {
     voiceSearchTitle: "Voice Search",
-    voiceSearchDescription: "Tap the microphone to speak in Sepedi. We'll transcribe and translate it to English.",
+    voiceSearchDescription: "Tap the microphone to speak.", 
     youSaidSepedi: "You said (Sepedi)",
     weUnderstoodEnglish: "We understood (English)"
   },

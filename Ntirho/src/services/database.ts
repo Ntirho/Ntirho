@@ -4,6 +4,7 @@ import { Disability, Certificate, Education, Experience, Job, UserAttributes, Us
 import { UUID } from 'crypto';
 import { abort } from 'process';
 import { environment } from '../environments/environment.development';
+import { Subject } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -191,13 +192,24 @@ export class Database {
 
   // User
   async insertUser(user: Omit<User, 'user_id'>) {
-  const { data, error } = await this.supabase
-    .from('users')
-    .insert([user])
-    .select();
+    const { data, error } = await this.supabase
+      .from('users')
+      .insert([user])
+      .select();
 
-  return { data, error };
-}
+    return { data, error };
+  }
+
+  // Subject
+  async insertSubject(subject: Omit<Subject, 'subject_id'>) {
+    const { data, error } = await this.supabase
+      .from('subject')
+      .insert(subject)
+      .select()
+      .single();
+
+    return { data, error };
+  }
 
 async testInsert() {
   const testUser = {
@@ -277,6 +289,20 @@ async testInsert() {
     console.log('Experiences filtered.', experiences);
 
     return experiences;
+  }
+
+  // Subject
+  async getSubjects(id: number): Promise<Subject[]> {
+    const { data, error } =  await this.supabase.from('subject')
+                                                .select('*')
+                                                .eq('qualification_id', id);
+
+    if (error) {
+      console.error('Error while retrieving subjects.', error);
+      return [];
+    }
+
+    return data;
   }
 
   // Job
@@ -379,6 +405,7 @@ async testInsert() {
       .update({
         qualification: education.qualification,
         average: education.average,
+        name: education.name,
         completion_date: education.completion_date
       })
       .eq('qualification_id', id)
@@ -395,6 +422,19 @@ async testInsert() {
         end_date: exp.end_date
       })
       .eq('experience_id', id)
+      .select();
+
+    return { data, error };
+  }
+
+  // Subject
+  async updateSubject(subj: Subject, id: number) {
+    const { data, error } = await this.supabase.from('subject')
+      .update({
+        name: subj.name,
+        average: subj.average
+      })
+      .eq('subject_id', id)
       .select();
 
     return { data, error };
@@ -442,7 +482,7 @@ async testInsert() {
       .select();
 
     if(error)
-      console.error('Error while update education', error);
+      console.error('Error while updating education', error);
 
     return { data, error };
   }
@@ -455,7 +495,20 @@ async testInsert() {
       .select();
 
     if(error)
-      console.error('Error while update experience', error);
+      console.error('Error while updating experience', error);
+
+    return { data, error };
+  }
+
+  // Subject
+  async deleteSubject(subject_id: number) {
+    const { data, error } = await this.supabase.from('subject')
+      .delete()
+      .eq('subject_id', subject_id)
+      .select();
+
+    if(error)
+      console.error('Error while updating subject', error);
 
     return { data, error };
   }
@@ -468,7 +521,7 @@ async testInsert() {
       .select();
 
     if(error)
-      console.error('Error while update certificate', error);
+      console.error('Error while updating certificate', error);
 
     return { data, error };
   }

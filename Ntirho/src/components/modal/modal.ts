@@ -21,7 +21,10 @@ export class Modal {
 
   constructor(private languageService: LanguageService){
     this.currentLang = languageService.getLanguage(); 
-    this.translations = translations[this.currentLang];// languageService.translations;
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+      this.translations = translations[this.currentLang];
+    });
   }
 
   onClose(){

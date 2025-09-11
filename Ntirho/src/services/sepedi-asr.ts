@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class SepediASR {
-  private apiUrl = 'http://localhost:8000/transcribe'; // Change to your backend URL
+  private apiUrl = 'http://localhost:8000/transcribe_2'; // Change to your backend URL
   private mediaRecorder!: MediaRecorder;
   private audioChunks: Blob[] = [];
   transcriptionSubject = new Subject<string>();

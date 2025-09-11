@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Language, LanguageService } from '../../services/language';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-footer',
   imports: [
-    RouterLink
+    RouterLink,
+    CommonModule
   ],
   templateUrl: './footer.html',
   styleUrl: './footer.css'
@@ -14,13 +16,25 @@ export class Footer {
   translations: any = {};
   currentLang: Language = 'en';
   currentYear = new Date().getFullYear();
+  pathName = '';
 
-  constructor(private languageService: LanguageService) {}
+  constructor(
+    private languageService: LanguageService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     // Set the language
     this.currentLang = this.languageService.getLanguage();
-    this.translations = translations[this.currentLang];
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+      this.translations = translations[this.currentLang];
+    });
+
+    // Subscribe to router
+    this.router.events.subscribe(x => {
+      this.pathName = this.router.url;
+    });
   }
 }
 

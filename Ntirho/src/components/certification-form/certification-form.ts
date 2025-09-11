@@ -39,6 +39,9 @@ export class CertificateForm implements OnInit {
   ngOnInit(): void {
     // Language
     this.currentLang = this.languageService.getLanguage();
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+    })
     this.translations = translations;
 
     // Get user_id

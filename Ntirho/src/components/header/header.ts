@@ -36,7 +36,11 @@ export class Header implements OnInit {
   ngOnInit() {
     // Set the language
     this.currentLang = this.languageService.getLanguage();
-    this.translations = translations[this.currentLang];
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+      this.translations = translations[this.currentLang];
+    })
+    
     // this.isAuthenticated = this.authService.isAuthenticated();
     //this.pathname = this.router.url;
 
@@ -49,6 +53,9 @@ export class Header implements OnInit {
     // Subscribe to the router
     this.router.events.subscribe(status => {
       this.pathname = this.router.url;
+
+      // Close the menu
+      this.userMenuOpen = false;
     })
   }
 

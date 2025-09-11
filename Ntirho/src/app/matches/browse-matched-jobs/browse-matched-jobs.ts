@@ -45,6 +45,9 @@ export class BrowseMatchedJobs implements OnInit {
   ngOnInit(): void {
     // Set language
     this.currentLang = this.languageService.getLanguage();
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+    })
     this.translations = translations;
 
     // this.fetchMatches();

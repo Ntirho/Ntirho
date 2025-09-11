@@ -42,6 +42,9 @@ export class RegistrationForm implements OnInit {
   ngOnInit () {
     // Set the language
     this.currentLang = this.languageService.getLanguage();
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+    });
     this.translations = translations;
 
     this.personalDetailsForm = this.fb.group({

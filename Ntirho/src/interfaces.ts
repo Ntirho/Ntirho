@@ -102,6 +102,7 @@ export interface Education {
   start_date?: string;
   completion_date?: string;
   average?: number;
+  name?: string,
   date_created?: string;
 }
 
@@ -125,6 +126,14 @@ export interface Certificate {
   expiry_date?: string;
   credential_url?: string;
   date_created?: string;
+}
+
+export interface Subject {
+  subject_id: number,
+  qualification_id: number,
+  name: string,
+  average: number,
+  date_created: string
 }
 
 /**

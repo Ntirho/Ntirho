@@ -40,10 +40,14 @@ export class Editor implements OnInit{
 
   ngOnInit(): void {
   this.editorLabel = this.getEditorLabel();
+
+  // Update language
+  this.languageService.language$.subscribe(x => {
+    this.currentLang = x;
+  })
 }
 
 getEditorLabel(): string {
-  this.currentLang = this.languageService.getLanguage();
   const t = translations[this.currentLang];
 
   if (this.personalDetails) return t.editorPersonalDetails;

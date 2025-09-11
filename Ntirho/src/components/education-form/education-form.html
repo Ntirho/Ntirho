@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="max-h-[80vh] overflow-y-auto bg-neutral-100 rounded-lg border border-gray-500 p-5 m-3.5 space-y-4">
 
   <!-- Institution -->
   <div class="flex flex-col">
@@ -10,7 +10,7 @@
       class="bg-gray-200 h-8 p-2 rounded"
     />
     <div *ngIf="form.get('institution')?.invalid && form.get('institution')?.touched" class="text-red-500 text-sm">
-      {{ translations.institutionLabel }}
+      {{ translations.errors.required }}
     </div>
   </div>
 
@@ -25,6 +25,69 @@
       {{ translations.errors.invalidQualification }}
     </div>
   </div>
+
+  <!-- Name -->
+  <div class="flex flex-col">
+    <label class="font-medium">{{ translations.name }}</label>
+    <input
+      type="text"
+      formControlName="name"
+      placeholder= "e.g. Mathematical Sciences" 
+      class="bg-gray-200 h-8 p-2 rounded"
+    />
+    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500 text-sm">
+      {{ translations.errors.required }}
+    </div>
+  </div>
+
+  <!-- Subjects -->
+   <div class="flex flex-col">
+    <label class="font-medium">Subjects</label>
+
+    <div *ngIf="!checkSubjectCount().check && form.touched" class="text-red-500 text-sm">
+      {{ translations.errors.required }} - {{ checkSubjectCount().count - subjects.length }}
+    </div>
+
+    <!-- Form -->
+    <div *ngIf="showAddSubject" class="flex flex-col" [formGroup]="subjectForm">
+      <input 
+        type="text"
+        formControlName="name"
+        class="bg-gray-200 h-8 p-2 rounded"
+        placeholder="e.g. Speech Technology"/>
+      <div *ngIf="subjectForm.get('name')?.invalid && subjectForm.get('name')?.touched" class="text-red-500 text-sm">
+        {{ translations.errors.required }}
+      </div>
+      <div class="flex flex-row m-2 gap-1.5 justify-center items-center">
+        <input 
+          type="range"
+          formControlName="average"
+          class="bg-gray-200 h-8 p-2 rounded w-2/3"
+          placeholder="e.g. Speech Technology"/>
+        <span class="text-sm text-gray-600 mt-1">{{ subjectForm.get('average')?.value }}%</span>
+      </div>
+      <div class="flex flex-row justify-center items-center">
+        <button type="button" (click)="addSubject()" class="bg-amber-500 hover:bg-amber-300 rounded cursor-pointer w-2/3">
+          Add
+        </button>
+      </div>
+    </div>
+
+    <!-- Display -->
+     <div *ngIf="subjects.length > 0"
+        class="flex flex-wrap rounded border-gray-400 m-2 p-2 gap-1.5 overflow-hidden">
+        <div *ngFor="let subject of subjects" class="flex flex-row w-fit row rounded-2xl bg-amber-100 m-2 p-2 gap-1.5 items-center">
+          {{ subject.name }} ({{ subject.average }}%)
+          <button *ngIf="!isEdit" type="button" (click)="removeSubject(subject.name)">
+            <i class="bx bx-x cursor-pointer hover:bg-amber-400 rounded-full"></i>
+          </button>
+          <button *ngIf="isEdit" type="button" (click)="editSubject(subject)">
+            <i class="bx bx-pen cursor-pointer hover:bg-green-400 rounded-full"></i>
+          </button>
+        </div>
+      </div>
+
+   </div>
 
   <!-- Start Date -->
   <div class="flex flex-col">
@@ -44,7 +107,7 @@
     </div>
   </div>
 
-  <!-- Academic Average -->
+  <!-- Academic Average
   <div class="flex flex-col">
     <label class="font-medium">{{ translations.academicAverageLabel }}</label>
     <input type="range" formControlName="average" min="0" max="100" class="bg-gray-200 h-2 rounded-full cursor-pointer" />
@@ -52,7 +115,7 @@
     <div *ngIf="form.get('average')?.invalid && form.get('average')?.touched" class="text-red-500 text-sm">
       {{ translations.errors.required }}
     </div>
-  </div>
+  </div> -->
 
   <!-- Submit Button -->
 <div class="flex flex-col justify-center">

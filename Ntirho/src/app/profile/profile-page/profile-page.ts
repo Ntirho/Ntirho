@@ -13,6 +13,7 @@ import { AuthService } from '../../../services/auth';
 import { ExperienceForm } from '../../../components/experience-form/experience-form';
 import { Editor } from "../../../components/editor/editor";
 import { ConfirmDelete } from "../../../components/confirm-delete/confirm-delete";
+import { Subject } from '../../../interfaces';
 
 @Component({
   selector: 'app-profile-page',
@@ -59,6 +60,7 @@ export class ProfilePage {
   qualifications: Education[] = [];
   certificates: Certificate[] = [];
   experiences: Experience[] = [];
+  subjects: Subject[] = [];
   submittedData!: User;
   disability!: string;
   attributes!: UserAttributes; 
@@ -79,6 +81,9 @@ export class ProfilePage {
   ngOnInit() {
     // Set the language
     this.currentLang = this.languageService.getLanguage();
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+    });
     this.translations = translations;
 
     // Update the user_id
@@ -132,6 +137,10 @@ export class ProfilePage {
       }
 
       this.qualifications = data;
+      // Fetch the subject per qualification
+      this.qualifications.forEach(qual => {
+        this.getSubjects(qual);
+      });
 
       // Notify the UI
       this.cdr.detectChanges();
@@ -190,6 +199,11 @@ export class ProfilePage {
       // Notify UI
       this.cdr.detectChanges();
     })
+  }
+  async getSubjects(qual: Education) {
+    const subjs = await this.db.getSubjects(qual.qualification_id).then(subj => {
+      this.subjects = [...this.subjects, ...subj];
+    });
   }
 
   // Editor inputs
@@ -474,6 +488,10 @@ export class ProfilePage {
   onClodeEditor () {
     this.isEditorOpen = false;
 
+    // Refetch data
+    this.fetchData();
+    this.cdr.markForCheck();
+
     // Nuliify the selected variables
     this.selectedCertificate = null;
     this.selectedEducation = null;
@@ -607,6 +625,7 @@ const translations = {
     deleteEducationLabel: "Phumula Thuto",
     educationLabel: "Thuto",
     institution: "Sekolo",
+    qualification: "palomoka ya mogolo",
     completionDate: "Letšatši la go Fediša",
     academicAverage: "Karolelano ya Thuto",
     skillsTitle: "Bokgoni bja ka",

@@ -44,7 +44,10 @@ export class BrowseJobs implements OnInit {
   ngOnInit() {
     // Set language
     this.currentLang = this.languageService.getLanguage();
-    this.translations = translations[this.currentLang];
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+      this.translations = translations[this.currentLang];
+    })
 
     // Get jobs
     this.getJobs();

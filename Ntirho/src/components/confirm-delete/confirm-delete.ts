@@ -3,6 +3,7 @@ import { Education, Certificate, Experience } from '../../interfaces';
 import { Language, LanguageService } from '../../services/language';
 import { CommonModule } from '@angular/common';
 import { Database } from '../../services/database';
+import { date } from 'zod';
 
 @Component({
   selector: 'app-confirm-delete',
@@ -18,6 +19,7 @@ export class ConfirmDelete implements OnInit{
   @Input() certificate: Certificate | null = null;
   @Input() experience: Experience | null = null;
   @Output() close = new EventEmitter<void>();
+  @Output() isDeleted = false;
   
   translations : any = {};
   currentLang: Language = 'en';
@@ -33,11 +35,17 @@ export class ConfirmDelete implements OnInit{
 
   ngOnInit(): void {
   this.currentLang = this.languageService.getLanguage();
+  this.languageService.language$.subscribe(x => {
+    this.currentLang = x;
+    this.translations = translations[this.currentLang];
+  });
   const t = translations[this.currentLang];
 
   if (this.education) {
     this.deleteLabel = t.deleteEducation;
-    this.message = this.education.qualification ?? '';
+
+    const messageTemp = this.education.qualification + '(' + this.education.name + ')';
+    this.message = messageTemp ?? '';
   } else if (this.experience) {
     this.deleteLabel = t.deleteExperience;
     this.message = this.experience.title ?? '';
@@ -61,22 +69,40 @@ export class ConfirmDelete implements OnInit{
 
   async onDelete () {
       if (this.education){
-        await this.db.deleteEducation(this.education.qualification_id);
+        await this.db.deleteEducation(this.education.qualification_id).then(result => {
+          if (result.error){
+            console.log(`Error while deleting ${this.education?.qualification} - ${this.education?.name}.`, result.error);
+            return;
+          }
 
-        // Alert the user
-        alert('Your qualification was successfully deleted.')
+          // Alert the user
+          alert('Your qualification was successfully deleted.');
+          this.isDeleted = true;
+        });
       }
       else if (this.experience){
-        await this.db.deleteExperience(this.experience.experience_id);
+        await this.db.deleteExperience(this.experience.experience_id).then(result => {
+          if (result.error){
+            console.log(`Error while deleting ${this.experience?.title}.`, result.error);
+            return;
+          }
 
-        // Alert the user
-        alert('Your experience was successfully deleted.')
+          // Alert the user
+          alert('Your experience was successfully deleted.');
+          this.isDeleted = true;
+        });
       }
       else if (this.certificate){
-        await this.db.deleteCertificate(this.certificate.certificate_id);
+        await this.db.deleteCertificate(this.certificate.certificate_id).then(result => {
+          if (result.error){
+            console.log(`Error while deleting ${this.certificate?.title}.`, result.error);
+            return;
+          }
 
-        // Alert the user
-        alert('Your certificate was successfully deleted.')
+          // Alert the user
+          alert('Your certificate was successfully deleted.');
+          this.isDeleted = true;
+        });
       }
       else
         console.log('Nothing to delete');

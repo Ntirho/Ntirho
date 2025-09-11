@@ -24,7 +24,10 @@ export class Hero implements OnInit {
   ngOnInit(): void {
     // Set the language
     this.currentLang = this.languageService.getLanguage();
-    this.translations = translations[this.currentLang];
+    this.languageService.language$.subscribe(x => {
+      this.currentLang = x;
+      this.translations = translations[this.currentLang];
+    });
   }
 }
 

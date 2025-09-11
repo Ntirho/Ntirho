@@ -1,7 +1,7 @@
 <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
   <div class="container flex h-14 items-center">
     <div class="container items-start justify-start">
-      <ng-container *ngIf="['/', '/post-job', '/signup', '/reset-password'].includes(pathname); else jobs">
+      <ng-container *ngIf="['/', '/signup', '/reset-password'].includes(pathname); else jobs">
         <a routerLink="/" class="mr-6 flex justify-start px-12 items-center space-x-2">
           <i class='bx bx-briefcase-alt text-cyan-600 text-2xl'></i>
           <span class="font-bold inline-block font-headline text-lg">
@@ -38,7 +38,7 @@
 
       <!-- Auth Dropdown -->
       <ng-container *ngIf="isAuthenticated">
-        <ng-container *ngIf="!['/', '/post-job', '/signup', '/reset-password'].includes(pathname)">
+        <ng-container *ngIf="!['/', '/signup', '/reset-password'].includes(pathname)">
           <div class="relative">
             <button (click)="toggleUserMenu()" class="relative h-12 w-12 rounded-full cursor-pointer">
               <i class="bx bx-user-circle text-2xl"></i>
