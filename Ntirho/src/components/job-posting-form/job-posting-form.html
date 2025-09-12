@@ -55,25 +55,12 @@
   <!-- Skills -->
   <div class="space-y-2">
     <label class="block text-sm font-medium text-gray-700">{{ translations.skillsLabel }}</label>
-    <button
-      type="button"
-      (click)="showSkills = !showSkills"
-      class="w-full text-left border border-gray-300 rounded-md px-4 py-2 bg-gray-50 hover:bg-gray-100"
-    >
-      {{ (form.value.skills?.length || 0) > 0 ? getSelectedSkillLabels() : translations.skillsPlaceholder }}
-    </button>
-
-    <div *ngIf="showSkills" class="grid grid-cols-2 gap-2 mt-2">
-      <div *ngFor="let skill of skillsList" class="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          [checked]="isSelected(skill.value)"
-          (change)="toggleSkill(skill.value)"
-          class="accent-primary"
-        />
-        <span class="text-sm text-gray-700">{{ skill.label }}</span>
-      </div>
-    </div>
+    <textarea
+      formControlName="skills"
+      [placeholder]="translations.skillsPlaceholder"
+      class="w-full border border-gray-300 rounded-md px-2 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+      rows="2"
+    ></textarea>
 
     <small class="text-gray-500">{{ translations.skillsDescription }}</small>
     <div *ngIf="form.get('skills')?.invalid && form.get('skills')?.touched" class="text-red-500 text-sm">

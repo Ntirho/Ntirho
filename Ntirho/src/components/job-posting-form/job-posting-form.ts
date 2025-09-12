@@ -6,6 +6,7 @@ import { Language, LanguageService } from '../../services/language';
 import { CommonModule } from '@angular/common';
 import { Database } from '../../services/database';
 import { error } from 'console';
+import { Job } from '../../interfaces';
 
 @Component({
   selector: 'app-job-posting-form',
@@ -35,7 +36,7 @@ export class JobPostingForm implements OnInit{
       company: ['', [Validators.required, Validators.minLength(2)]],
       location: ['', [Validators.required, Validators.minLength(2)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
-      skills: [[]]
+      skills: ['']
     });
   }
 
@@ -64,7 +65,12 @@ export class JobPostingForm implements OnInit{
     this.isLoading = true;
     this.triedValidation = false;
 
-    console.log('The form is valid.');
+    // Form value
+    const formValue: Job = this.form.value;
+    const skills = this.form.get('skills')?.value;
+    formValue.skills = skills.trim().split(',');
+
+    console.log('The form is valid. Skills: ', formValue.skills);
     try {
       const results = await this.db.insertJob(this.form.value);
       if ( results.error ) {
@@ -132,9 +138,9 @@ const translations = {
     descriptionPlaceholder: "Brief summary of the role and responsibilities",
     descriptionError: "Required. Please enter a valid job description.",
     skillsLabel: "Required Skills",
-    skillsPlaceholder: "Select relevant skills",
-    skillsDescription: "Choose the skills that best match this job.",
-    skillsError: "Required. Please select the appropriate skills.",
+    skillsPlaceholder: "Enter relevant skills",
+    skillsDescription: "Write the skills that best match this job. Must be comma-separated.",
+    skillsError: "Required. Please enter the appropriate skills.",
     postJobButton: "Post Job"
   },
   nso: {
