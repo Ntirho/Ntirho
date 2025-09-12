@@ -259,7 +259,6 @@
           <p><strong>{{ translations[currentLang]?.qualification }}:</strong> {{ education.qualification }}</p>
           <p><strong>{{ translations[currentLang]?.startDate }}:</strong> {{ education.start_date | date }}</p>
           <p><strong>{{ translations[currentLang]?.completionDate }}:</strong> {{ education.completion_date | date }}</p>
-          <p><strong>{{ translations[currentLang]?.academicAverage }}:</strong> {{ education.average }}%</p>
           <p><strong>Subjects:</strong></p>
           <div *ngIf="subjects.length > 0"
             class="flex flex-wrap rounded border-gray-400 p-2">
