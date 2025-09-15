@@ -49,7 +49,7 @@
     </div>
 
     <!-- Form -->
-    <div *ngIf="showAddSubject" class="flex flex-col" [formGroup]="subjectForm">
+    <div *ngIf="!isEdit || showAddSubject" class="flex flex-col" [formGroup]="subjectForm">
       <input 
         type="text"
         formControlName="name"

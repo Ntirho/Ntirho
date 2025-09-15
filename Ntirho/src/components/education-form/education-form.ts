@@ -28,6 +28,7 @@ export class EducationForm implements OnInit {
   id = 0;
   isEdit = false;
   subjects: Subject[] = [];
+  showAddSubject = false;
 
   // Language
   currentLang: Language = 'en';
@@ -100,11 +101,11 @@ export class EducationForm implements OnInit {
 
     if(formValue) {
       const subj: Subject = formValue;
-      subj.subject_id = this.selectedSubject.subject_id;
       // subj.qualification_id = this.selectedSubject.qualification_id;
 
       // Add subject
       if (this.isEdit) {
+        subj.subject_id = this.selectedSubject.subject_id;
         // update db
         await this.db.updateSubject(subj, subj.subject_id).then(data => {
           // Error
@@ -142,7 +143,6 @@ export class EducationForm implements OnInit {
   }
 
   // Edit subject
-  showAddSubject = false;
   editSubject(subj: Subject) {
     // Fill in the subject form
     this.subjectForm = this.fb.group({
@@ -191,7 +191,22 @@ export class EducationForm implements OnInit {
       return;
     }
 
+    // form value
+    var formValue: Education = this.form.value;
+
     this.isLoading = true;
+
+    if (this.checkSubjectCount().check){
+      // Compute average and assign it to the qualification
+      var total = 0;
+      this.subjects.forEach(subj => {
+        total += subj.average;
+      });
+
+      const avg = total / this.subjects.length;
+      formValue.average = avg;
+      console.log('Computed avg: ', formValue.average);
+    }
     
     try {
       const results = !this.isEdit ?
