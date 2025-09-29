@@ -9,7 +9,8 @@ import { Certificate, Experience, Job, UserAttributes } from '../interfaces';
 export class GenaiService {
   // AI Client
   ai = new GoogleGenAI({ apiKey: environment.GEMINI_API_KEY});
-  model = 'gemini-2.5-flash-lite'
+  model = 'gemini-2.5-flash-lite';
+  models = ['gemini-2.5-flash-lite', 'gemini-2.0-flash-lite'];
 
   // Function to handle communication
   async Tester() {

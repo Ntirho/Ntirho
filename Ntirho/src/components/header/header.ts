@@ -59,6 +59,10 @@ export class Header implements OnInit {
     })
   }
 
+  ngAfterViewInit () {
+    
+  }
+
   setLanguage(lang: Language) {
     this.languageService.setLanguage(lang);
     this.currentLang = lang;

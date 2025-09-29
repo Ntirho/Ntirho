@@ -114,8 +114,12 @@ export class LoginForm implements OnInit {
         // Set the user_id in the auth
         await this.authService.setUserId(user_id);
 
+        this.authService.setSession(data.session);
+        console.log(data?.session);
+
+
         setTimeout(() => {
-          this.authService.login();
+          this.authService.login(data.session);
           //this.toast.show(this.translations.loginSuccessTitle, this.translations.welcomeBack);
           this.router.navigate(['/jobs']);
         }, 2000);

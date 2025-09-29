@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { AuthChangeEvent, AuthSession, createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Disability, Certificate, Education, Experience, Job, UserAttributes, User, AppUser } from '../interfaces';
 import { UUID } from 'crypto';
 import { abort } from 'process';
 import { environment } from '../environments/environment.development';
 import { Subject } from '../interfaces';
+import { Session } from 'inspector/promises';
+import { Behavior } from '@google/genai';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +17,8 @@ export class Database {
   private url = environment.SUPABASE_URL;
   private key = environment.SUPABASE_KEY;
   public supabase: SupabaseClient;
+  _session: AuthSession | null = null; 
+  // sessionListener = new BehaviorSubject<Session>()
 
   constructor(){
     this.supabase = createClient(this.url, this.key);
@@ -22,6 +27,21 @@ export class Database {
   /**
    * Authentication
    */
+
+  // Get session
+  get session() {
+    this.supabase.auth.getSession().then (({data}) => {
+      console.log(`Session in get session: ${data.session}`);
+      this._session = data.session;
+
+      return data.session;
+    });
+
+    return this._session;
+  }
+  authChanges(callback: (event: AuthChangeEvent, session: AuthSession | null) => void) {
+    return this.supabase.auth.onAuthStateChange(callback);
+  }
 
   // Sign up with email and password. Email has to be confirmed
   async signUpWithEmailPassword(email: string, password: string/*, urlRedirect: string*/){
@@ -36,7 +56,7 @@ export class Database {
     return { data, error };
   }
 
-    // Sign up with email and password. Email has to be confirmed
+  // Sign up with email and password. Email has to be confirmed
   async signUpWithEmailPasswordMetadata(email: string, password: string, user: AppUser){
     const { data, error } = await this.supabase.auth.signUp({
       email: email,
@@ -89,7 +109,19 @@ export class Database {
       password: password
     });
 
+    // Set session
+    this._session = data.session;
+
     return { data, error };
+  }
+
+  // Sign out user
+  async signOut() {
+    const { error } = await this.supabase.auth.signOut();
+    
+    if(error) {
+      console.error(`Error while signing out user.`, error.message);
+    }
   }
 
   // Sign in with email OTP
@@ -282,11 +314,7 @@ async testInsert() {
       console.error('Error while retrieving experiences.', error);
       return [];
     }
-
-    console.log('Experiences.', data);
-
     const experiences = data?.filter(x => x.user_id === id) ?? [];
-    console.log('Experiences filtered.', experiences);
 
     return experiences;
   }

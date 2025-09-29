@@ -18,6 +18,7 @@ export class AuthService {
   private userId!: string;
   private _isAuthenticated = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this._isAuthenticated.asObservable();
+  session: AuthSession | null = null;
 
   constructor(private router: Router, private db: Database) {
     if (typeof window !== 'undefined' && localStorage) {
@@ -26,13 +27,28 @@ export class AuthService {
     }
   }
 
+  // To set session from auth.ts
+  setSession(_session: AuthSession) {
+    this.session = _session;
+  }
+
+  // To get session from auth.ts
+  getSession() {
+    return this.db.session;
+  }
+
   isAuthenticated(): boolean {
     return this._isAuthenticated.value;
   }
 
-  login(): void {
+  login(session: AuthSession): void {
     localStorage.setItem('isAuthenticated', 'true');
     this._isAuthenticated.next(true);
+
+    // Set session
+    this.session = session;
+    if(session.expires_at)
+      localStorage.setItem('session_expires_at', session.expires_at.toString());
   }
 
   async loginUser(formData: { email: string; password?: string }) {
@@ -51,11 +67,17 @@ export class AuthService {
   }
 
   logout(): void {
+    // Sign out
+    this.db.signOut();
+
     localStorage.removeItem('isAuthenticated');
     this._isAuthenticated.next(false);
     
     // Need to remove the user_id
     this.removeUserID();
+
+    // Remove session
+    localStorage.removeItem('session_expires_at');
   }
 
   /**
@@ -84,6 +106,7 @@ export class AuthService {
 // Confirm Password
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { Database } from './database';
+import { AuthSession } from '@supabase/supabase-js';
 
 // export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
 //   const password = control.get('password')?.value;

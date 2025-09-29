@@ -6,34 +6,42 @@ import { RegistrationPage } from './signup/registration-page/registration-page';
 import { BrowseMatchedJobs } from './matches/browse-matched-jobs/browse-matched-jobs';
 import { PostJob } from './admin/post-job/post-job';
 import { ResetPassword } from './signup/reset-password/reset-password';
+import { AuthGuard } from './guards/can-activate-guard-guard';
 
 export const routes: Routes = [
     {
         path: '',
-        component: Hero
+        component: Hero, 
+        canActivate: [AuthGuard]
     },
     {
         path: 'jobs',
-        component: BrowseJobs
+        component: BrowseJobs, 
+        canActivate: [AuthGuard]
     },
     {
         path: 'profile',
-        component: ProfilePage
+        component: ProfilePage,
+        canActivate: [AuthGuard]
     },
     {
         path: 'signup',
-        component: RegistrationPage
+        component: RegistrationPage, 
+        canActivate: [AuthGuard]
     },
     {
         path: 'matches',
-        component: BrowseMatchedJobs
+        component: BrowseMatchedJobs,
+        canActivate: [AuthGuard]
     },
     {
         path: 'post-job',
-        component: PostJob
+        component: PostJob,
+        canActivate: [AuthGuard]
     },
     {
         path: 'reset-password',
-        component: ResetPassword
+        component: ResetPassword, 
+        canActivate: [AuthGuard]
     }
 ];

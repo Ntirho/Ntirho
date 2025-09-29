@@ -52,9 +52,6 @@ export class MatchedJobCard implements OnChanges, OnInit{
         this.jobs = data;
       
         this.temp_job = this.jobs.find(x => x.job_id === this.job.job_id)!;  
-
-        console.log('Jobs from matched card', this.jobs);
-        console.log('Selected job', this.job);
       }
     })
   }
